@@ -74,5 +74,11 @@ fun LatoTypography(): Typography {
             fontSize = 12.sp,
             fontFamily = circular
         ),
+        labelSmall = TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            fontFamily = circular,
+            lineHeight = 16.sp
+        )
     )
 }

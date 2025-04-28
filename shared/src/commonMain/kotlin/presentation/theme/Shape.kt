@@ -49,6 +49,14 @@ fun DefaultButtonTheme() = buttonColors(
     disabledContentColor = MaterialTheme.colorScheme.primary
 )
 
+@Composable
+fun SecondaryButtonTheme() = buttonColors(
+    containerColor = MaterialTheme.colorScheme.onPrimary,
+    contentColor = MaterialTheme.colorScheme.onBackground,
+    // disabledBackgroundColor = MaterialTheme.colorScheme.background,
+    disabledContentColor = MaterialTheme.colorScheme.primary
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultTextFieldTheme() = textFieldColors(
