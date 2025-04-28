@@ -5,13 +5,14 @@ import androidx.compose.ui.graphics.Color
 
 val PrimaryColor = Color(0xFF3843FF)
 val PrimaryVariantColor = Color(0xFF6069FF)
+val Primary40 = Color(0xFFAFB4FF)
 val AccentColor = Color(0xFFC62F79)
 val BackgroundContent = Color(0xFFf6f6f6)
 val lightSurface =  Color(0xFFf5f5f5)
 
 val Grey = Color(0xFF404649)
 
-val PagerDotColor = Color(0xFFC4CDD3)
+val PagerDotColor = Color(0xFF888EFF)
 val IconColorGrey = Grey
 
 val TextFieldColor = Color(0xFFf6f6f6)
