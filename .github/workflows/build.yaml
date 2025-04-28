@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: macOS-latest
+
+    strategy:
+      matrix:
+        platform: [ android, ios, tv, desktop, web]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ matrix.platform }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      # Build Android APK
+      - name: Build Android
+        if: matrix.platform == 'android'
+        run: ./gradlew :androidApp:assembleDebug
+
+      - name: Upload Android APK
+        if: matrix.platform == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+
+      # Build iOS Framework
+      - name: Build iOS
+        if: matrix.platform == 'ios'
+        run: ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64
+
+      # Build Android TV APK
+      - name: Build TV App
+        if: matrix.platform == 'tv'
+        run: ./gradlew :tvApp:assembleDebug
+
+      - name: Upload TV APK
+        if: matrix.platform == 'tv'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv-apk
+          path: tvApp/build/outputs/apk/debug/tvApp-debug.apk
+
+      # Build Desktop App
+      - name: Build Desktop
+        if: matrix.platform == 'desktop'
+        run: ./gradlew :desktopApp:packageDistributionForCurrentOS
+
+      - name: Upload Desktop App
+        if: matrix.platform == 'desktop'
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-app
+          path: desktopApp/build/compose/binaries/**
+
+      # Build Web App
+      - name: Build WebApp
+        if: matrix.platform == 'web'
+        run: ./gradlew :webApp:jsBrowserProductionWebpack
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Android APK
+        uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          path: ./artifacts/android
+
+      - name: Download TV APK
+        uses: actions/download-artifact@v4
+        with:
+          name: tv-apk
+          path: ./artifacts/tv
+
+      - name: Download Desktop App
+        uses: actions/download-artifact@v4
+        with:
+          name: desktop-app
+          path: ./artifacts/desktop
+
+      - name: Zip Desktop Output
+        run: |
+          cd ./artifacts/desktop
+          zip -r ../desktopApp.zip .
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: ${{ github.event.repository.name }} v${{ github.run_number }}
+
+      - name: Upload Android APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/android/androidApp-debug.apk
+          asset_name: androidApp-debug.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload TV APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/tv/tvApp-debug.apk
+          asset_name: tvApp-debug.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload Desktop App Zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/desktopApp.zip
+          asset_name: desktopApp.zip
+          asset_content_type: application/zip
+
+      - name: Upload Web Distribution
+        if: matrix.platform == 'web'
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: webApp/build/distributions/
