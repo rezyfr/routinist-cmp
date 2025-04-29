@@ -81,9 +81,9 @@ fun DefaultCheckBoxTheme() = CheckboxDefaults.colors(
 
 @Composable
 fun DefaultCardColorsTheme() = CardColors(
-    containerColor = MaterialTheme.colorScheme.background,
+    containerColor = Color.White,
     contentColor = MaterialTheme.colorScheme.onBackground,
-    disabledContainerColor = MaterialTheme.colorScheme.background,
+    disabledContainerColor = Color.White,
     disabledContentColor = MaterialTheme.colorScheme.onBackground,
 )
 

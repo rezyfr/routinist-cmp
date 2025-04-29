@@ -15,14 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,14 +38,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.drick.compose.hotpreview.HotPreview
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import presentation.component.ButtonSize
 import presentation.component.ButtonType
+import presentation.component.DefaultButtonWithIcon
 import presentation.component.DefaultScreenUI
-import presentation.component.IconButton
 import presentation.component.Spacer_12dp
 import presentation.component.Spacer_16dp
 import presentation.component.Spacer_24dp
@@ -73,7 +73,7 @@ import routinist.shared.generated.resources.tagline_title_3
 
 @Composable
 fun OnBoardingScreen(
-    navigateToRegister: () -> Unit
+    navigateToLogin: () -> Unit
 ) {
     val pagerState = rememberPagerState { 3 }
     val onBoardingContent = arrayOf<Triple<DrawableResource, StringResource, StringResource>>(
@@ -134,14 +134,15 @@ fun OnBoardingScreen(
             }
 
             Spacer(Modifier.weight(1f))
-            IconButton(
+            DefaultButtonWithIcon(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 text = stringResource(Res.string.onboarding_continue),
                 style = MaterialTheme.typography.bodyMedium,
                 icon = vectorResource(Res.drawable.ic_login),
-                type = ButtonType.Secondary
+                type = ButtonType.Secondary,
+                size = ButtonSize.Large
             ) {
-
+                navigateToLogin.invoke()
             }
 
             Spacer_12dp()
@@ -245,4 +246,10 @@ private fun Dot(
             .clip(shape)
             .background(color)
     )
+}
+
+@HotPreview(heightDp = 852, widthDp = 393)
+@Composable
+fun PreviewDot() {
+    OnBoardingScreen {  }
 }

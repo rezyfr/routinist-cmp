@@ -9,4 +9,6 @@ sealed interface OnBoardingNavigation {
     data object OnBoarding: OnBoardingNavigation
     @Serializable
     data object Register: OnBoardingNavigation
+    @Serializable
+    data object Login: OnBoardingNavigation
 }

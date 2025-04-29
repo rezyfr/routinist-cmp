@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import presentation.navigation.OnBoardingNavigation
+import presentation.ui.onboarding.login.LoginScreen
 
 @Composable
 fun OnBoardingNav(
@@ -20,8 +21,18 @@ fun OnBoardingNav(
     ) {
         composable<OnBoardingNavigation.OnBoarding> {
             OnBoardingScreen(
+                navigateToLogin = {
+                    navigator.navigate(OnBoardingNavigation.Login)
+                }
+            )
+        }
+        composable<OnBoardingNavigation.Login> {
+            LoginScreen(
                 navigateToRegister = {
                     navigator.navigate(OnBoardingNavigation.Register)
+                },
+                onBackClick = {
+                    navigator.navigateUp()
                 }
             )
         }

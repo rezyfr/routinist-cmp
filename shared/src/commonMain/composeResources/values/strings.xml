@@ -11,4 +11,14 @@
     <string name="onboarding_continue">Continue with E-mail</string>
     <string name="onboarding_consent">By continuing you agree Terms of Services &amp; Privacy Policy </string>
 
+    <!-- Login -->
+    <string name="login_email">Enter your E-mail</string>
+    <string name="login_password">Enter your Password</string>
+    <string name="login_forgot_password">I forgot my password</string>
+    <string name="login_create_account">Don\u0027t have account? Let\u0027s create!</string>
+
+    <!-- Common -->
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="next">Next</string>
 </resources>

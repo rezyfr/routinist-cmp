@@ -14,71 +14,95 @@ import routinist.shared.generated.resources.Res
 
 @Composable
 fun LatoTypography(): Typography {
-    val circular = FontFamily(
+    val cereal = FontFamily(
         Font(
-            resource = Res.font.circular_bold,
+            resource = Res.font.cereal_bold,
             weight = FontWeight.Bold,
             style = FontStyle.Normal
         ),
         Font(
-            resource = Res.font.circular_medium,
+            resource = Res.font.cereal_medium,
             weight = FontWeight.Medium,
             style = FontStyle.Normal
         ),
         Font(
-            resource = Res.font.circular_book,
+            resource = Res.font.cereal_book,
             weight = FontWeight.Normal,
             style = FontStyle.Normal
         ),
         Font(
-            resource = Res.font.circular_medium,
+            resource = Res.font.cereal_medium,
             weight = FontWeight.Black,
             style = FontStyle.Normal
         ),
-        Font(
-            resource = Res.font.circular_light,
-            weight = FontWeight.Light,
-            style = FontStyle.Normal
-        )
     )
 
     return Typography(
-        headlineLarge = TextStyle(
+        displayLarge = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 48.sp,
+            fontFamily = cereal,
+            lineHeight = 56.sp
+        ),
+        displayMedium = TextStyle(
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
-            fontFamily = circular,
+            fontFamily = cereal,
             lineHeight = 48.sp
         ),
-        headlineSmall = TextStyle(
+        displaySmall = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 36.sp,
+            fontFamily = cereal,
+            lineHeight = 40.sp
+        ),
+        headlineLarge = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 32.sp,
+            fontFamily = cereal,
+            lineHeight = 40.sp
+        ),
+        headlineMedium = TextStyle(
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
-            fontFamily = circular
+            fontFamily = cereal,
+            lineHeight = 32.sp
         ),
-        titleLarge = TextStyle(
-            fontWeight = FontWeight.Normal,
+        headlineSmall = TextStyle(
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            lineHeight = 24.sp,
+            fontFamily = cereal
+        ),
+        titleMedium = TextStyle(
+            fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
-            fontFamily = circular
+            lineHeight = 24.sp,
+            fontFamily = cereal
         ),
         bodyLarge = TextStyle(
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            fontFamily = circular
-        ),
-        bodyMedium = TextStyle(
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
-            fontFamily = circular
+            lineHeight = 20.sp,
+            fontFamily = cereal
+        ),
+        bodyMedium = TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontFamily = cereal
         ),
         labelMedium = TextStyle(
-            fontWeight = FontWeight.Bold,
-            fontSize = 12.sp,
-            fontFamily = circular
-        ),
-        labelSmall = TextStyle(
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
-            fontFamily = circular,
+            lineHeight = 16.sp,
+            fontFamily = cereal
+        ),
+        labelSmall = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 10.sp,
+            fontFamily = cereal,
             lineHeight = 16.sp
-        )
+        ),
     )
 }

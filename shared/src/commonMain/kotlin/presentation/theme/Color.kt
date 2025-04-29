@@ -7,8 +7,11 @@ val PrimaryColor = Color(0xFF3843FF)
 val PrimaryVariantColor = Color(0xFF6069FF)
 val Primary40 = Color(0xFFAFB4FF)
 val AccentColor = Color(0xFFC62F79)
-val BackgroundContent = Color(0xFFf6f6f6)
+val BackgroundColor = Color(0xFFF6F9FF)
 val lightSurface =  Color(0xFFf5f5f5)
+val Black60 = Color(0xFF686873)
+val Black20 = Color(0xFFCDCDD0)
+val Green100 = Color(0xFF3BA935)
 
 val Grey = Color(0xFF404649)
 
@@ -16,7 +19,7 @@ val PagerDotColor = Color(0xFF888EFF)
 val IconColorGrey = Grey
 
 val TextFieldColor = Color(0xFFf6f6f6)
-val BorderColor = Color(0xFFDBDBDC)
+val BorderColor = Color(0xFFEAECF0)
 
 val splashBackground = Color(0xFF272320)
 

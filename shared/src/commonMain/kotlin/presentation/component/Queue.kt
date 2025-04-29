@@ -1,4 +1,4 @@
-package business.core
+package presentation.component
 
 /**
  * Kotlin version of a java.util Queue

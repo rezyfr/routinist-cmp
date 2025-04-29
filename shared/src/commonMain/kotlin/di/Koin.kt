@@ -1,8 +1,8 @@
 package di
 
 
-import business.core.AppDataStore
-import business.core.AppDataStoreManager
+import data.local.AppDataStore
+import data.local.AppDataStoreManager
 import common.Context
 import org.koin.dsl.module
 
