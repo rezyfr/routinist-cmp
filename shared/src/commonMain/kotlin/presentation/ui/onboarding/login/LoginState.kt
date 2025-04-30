@@ -1,0 +1,10 @@
+package presentation.ui.onboarding.login
+
+import presentation.component.ProgressBarState
+import presentation.component.ViewState
+
+data class LoginState(
+    val username: String = "",
+    val password: String = "",
+    val progressBarState: ProgressBarState = ProgressBarState.Idle
+) : ViewState

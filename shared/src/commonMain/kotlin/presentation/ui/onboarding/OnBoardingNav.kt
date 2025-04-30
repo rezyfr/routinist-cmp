@@ -2,18 +2,37 @@ package presentation.ui.onboarding
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
+import org.koin.compose.koinInject
 import presentation.navigation.OnBoardingNavigation
+import presentation.ui.onboarding.login.LoginAction
 import presentation.ui.onboarding.login.LoginScreen
+import presentation.ui.onboarding.login.LoginViewModel
 
 @Composable
 fun OnBoardingNav(
+    viewModel : LoginViewModel = koinInject(),
     navigateToMain: () -> Unit
 ) {
     val navigator = rememberNavController()
+
+    LaunchedEffect(viewModel) {
+        delay(4000L)
+        viewModel.action.onEach { effect ->
+            when (effect) {
+                LoginAction.NavigateToMain -> {
+                    navigateToMain()
+                }
+            }
+        }.collect {}
+    }
+
     NavHost(
         startDestination = OnBoardingNavigation.OnBoarding,
         navController = navigator,
@@ -28,12 +47,11 @@ fun OnBoardingNav(
         }
         composable<OnBoardingNavigation.Login> {
             LoginScreen(
-                navigateToRegister = {
-                    navigator.navigate(OnBoardingNavigation.Register)
-                },
-                onBackClick = {
-                    navigator.navigateUp()
-                }
+                navigateToRegister = { navigator.navigate(OnBoardingNavigation.Register) },
+                state = viewModel.state.value,
+                events = { event -> viewModel.setEvent(event) },
+                errors = viewModel.errors,
+                onBackClick = { navigator.navigateUp() }
             )
         }
     }

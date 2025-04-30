@@ -37,6 +37,7 @@ fun DefaultTextField(
     label: String = "",
     hint: String = "",
     interactionSource: InteractionSource? = null,
+    showClearText: Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit = {},
 ) {
@@ -57,7 +58,7 @@ fun DefaultTextField(
             decorationBox = { innerTextField ->
                 TextFieldDefaults.DecorationBox(
                     trailingIcon = {
-                        if (value.isNotEmpty()) {
+                        if (showClearText && value.isNotEmpty() && isFocused.value) {
                             Icon(
                                 Icons.Default.Cancel,
                                 contentDescription = null,
@@ -85,7 +86,7 @@ fun DefaultTextField(
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color.Transparent,
                         unfocusedContainerColor = Color.Transparent,
-                        unfocusedIndicatorColor = Black20,
+                        unfocusedIndicatorColor = if (isFocused.value) Green100 else Black20,
                         focusedIndicatorColor = Green100
                     )
                 )
@@ -113,7 +114,8 @@ fun PasswordTextField(
         hint = hint,
         interactionSource = interactionSource,
         onValueChange = onValueChange,
-        visualTransformation = PasswordVisualTransformation()
+        visualTransformation = PasswordVisualTransformation(),
+        showClearText = false
     )
 }
 
