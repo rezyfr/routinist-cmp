@@ -19,7 +19,7 @@ private val lightColorPalette = lightColorScheme(
     primaryContainer = PrimaryVariantColor,
     onPrimary = Color.White,
     secondary = AccentColor,
-    background = Color.White,
+    background = BackgroundColor,
     surfaceVariant = Color.White,
     surface = lightSurface,
 

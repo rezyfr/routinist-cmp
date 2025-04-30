@@ -1,6 +1,6 @@
 package business.datasoruce.datastore
 
-import business.core.AppDataStore
+import data.local.AppDataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class AppDataStoreFake : AppDataStore {

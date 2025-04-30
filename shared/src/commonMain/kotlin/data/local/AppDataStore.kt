@@ -1,4 +1,4 @@
-package business.core
+package data.local
 
 
 interface AppDataStore {

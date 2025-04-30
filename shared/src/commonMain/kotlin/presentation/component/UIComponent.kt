@@ -1,4 +1,4 @@
-package business.core
+package presentation.component
 
 
 sealed class UIComponent {

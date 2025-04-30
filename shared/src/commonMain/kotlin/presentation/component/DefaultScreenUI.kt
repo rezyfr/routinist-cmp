@@ -1,7 +1,8 @@
 package presentation.component
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,37 +13,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import business.constants.CUSTOM_TAG
-import business.core.NetworkState
-import business.core.ProgressBarState
-import business.core.Queue
-import business.core.UIComponent
-import business.core.ViewSingleAction
+import constants.CUSTOM_TAG
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import presentation.theme.BorderColor
 import presentation.theme.primaryGradient
-import routinist.shared.generated.resources.Res
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultScreenUI(
     errors: Flow<UIComponent> = MutableSharedFlow(),
@@ -66,27 +62,25 @@ fun DefaultScreenUI(
     Scaffold(
         topBar = {
             if (titleToolbar != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    if (startIconToolbar != null) {
-                        CircleButton(
-                            imageVector = startIconToolbar,
-                            onClick = { onClickStartIconToolbar() })
-                    } else {
-                        Spacer_16dp()
-                    }
-                    Text(titleToolbar, style = MaterialTheme.typography.titleLarge)
-
-                    if (endIconToolbar != null) {
-                        CircleButton(
-                            imageVector = endIconToolbar,
-                            onClick = { onClickEndIconToolbar() })
-                    } else {
-                        Spacer_16dp()
-                    }
+                Column {
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.White
+                        ),
+                        title = {
+                            Text(titleToolbar, style = MaterialTheme.typography.headlineMedium)
+                        },
+                        navigationIcon = {
+                            if (startIconToolbar != null) {
+                                IconButton(
+                                    modifier = Modifier.padding(start = 12.dp),
+                                    imageVector = startIconToolbar,
+                                    onClick = { onClickStartIconToolbar() },
+                                )
+                            }
+                        }
+                    )
+                    Box(Modifier.fillMaxWidth(1f).height(1.dp).background(BorderColor))
                 }
             }
         }

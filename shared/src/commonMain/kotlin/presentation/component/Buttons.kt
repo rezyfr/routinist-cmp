@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import business.core.ProgressBarState
 import presentation.theme.BorderColor
 import presentation.theme.DefaultButtonTheme
 import presentation.theme.DefaultButtonWithBorderPrimaryTheme
@@ -41,14 +40,14 @@ val DEFAULT__BUTTON_SIZE_EXTRA = 60.dp
 
 
 @Composable
-fun CircleButton(
+fun IconButton(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
     onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier.size(50.dp),
-        shape = CircleShape,
+        modifier = modifier.size(48.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = DefaultCardColorsTheme(),
         elevation = CardDefaults.cardElevation(0.dp),
         border = BorderStroke(1.dp, BorderColor),
@@ -117,6 +116,7 @@ fun DefaultButton(
     enableElevation: Boolean = false,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     shape: Shape = MaterialTheme.shapes.extraLarge,
+    size: ButtonSize = ButtonSize.Medium,
     text: String,
     onClick: () -> Unit,
 ) {
@@ -134,6 +134,7 @@ fun DefaultButton(
         shape = shape,
         onClick = onClick,
         progressBarState = progressBarState,
+        contentPadding = size.getPadding()
     ) {
         Text(
             text = text,
@@ -177,13 +178,14 @@ fun SecondaryButton(
 }
 
 @Composable
-fun IconButton(
+fun DefaultButtonWithIcon(
     modifier: Modifier = Modifier,
     type: ButtonType = ButtonType.Primary,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     shape: Shape = MaterialTheme.shapes.extraLarge,
     icon: ImageVector,
     text: String,
+    size: ButtonSize = ButtonSize.Medium,
     onClick: () -> Unit
 ) {
     Button(
@@ -191,9 +193,10 @@ fun IconButton(
         colors = if (type is ButtonType.Primary) DefaultButtonTheme()
         else SecondaryButtonTheme(),
         shape = shape,
+        contentPadding = size.getPadding(),
         onClick = onClick
     ) {
-        Icon(icon, null, tint = MaterialTheme.colorScheme.background)
+        Icon(icon, null)
         Spacer_4dp()
         Text(
             text = text,
@@ -205,4 +208,18 @@ fun IconButton(
 sealed interface ButtonType {
     data object Primary : ButtonType
     data object Secondary : ButtonType
+}
+
+sealed interface ButtonSize {
+    data object Small : ButtonSize
+    data object Medium : ButtonSize
+    data object Large : ButtonSize
+
+    fun getPadding() : PaddingValues{
+        return when (this) {
+            ButtonSize.Large -> PaddingValues(24.dp, 16.dp, 24.dp, 16.dp)
+            ButtonSize.Medium -> PaddingValues(24.dp, 12.dp, 24.dp, 12.dp)
+            ButtonSize.Small -> PaddingValues(24.dp, 8.dp, 24.dp, 8.dp)
+        }
+    }
 }
