@@ -1,5 +1,6 @@
 package presentation.ui.onboarding.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.jetbrains.compose.resources.stringResource
 import presentation.component.BasePreview
 import presentation.component.ButtonSize
@@ -26,6 +29,7 @@ import presentation.component.DefaultTextField
 import presentation.component.PasswordTextField
 import presentation.component.Spacer_16dp
 import presentation.component.Spacer_24dp
+import presentation.component.UIComponent
 import presentation.theme.AppTheme
 import presentation.theme.Black60
 import presentation.theme.BorderColor
@@ -40,13 +44,15 @@ import routinist.shared.generated.resources.login_create_account
 import routinist.shared.generated.resources.next
 @Composable
 fun LoginScreen(
-    navigateToRegister: () -> Unit,
-    onBackClick: () -> Unit
+    state: LoginState,
+    events: (LoginEvent) -> Unit = {},
+    errors: Flow<UIComponent>,
+    navigateToRegister: () -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
-    var email = remember { mutableStateOf("") }
-    var password = remember { mutableStateOf("") }
-
     DefaultScreenUI(
+        errors = errors,
+        progressBarState = state.progressBarState,
         titleToolbar = stringResource(Res.string.onboarding_continue),
         startIconToolbar = Icons.Default.ChevronLeft,
         onClickStartIconToolbar = onBackClick
@@ -60,9 +66,9 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(Res.string.email),
                 hint = stringResource(Res.string.login_email),
-                value = email.value,
+                value = state.username,
                 onValueChange = {
-                    email.value = it
+                    events(LoginEvent.OnUsernameChange(it))
                 }
             )
             Spacer_16dp()
@@ -70,9 +76,9 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(Res.string.password),
                 hint = stringResource(Res.string.login_password),
-                value = password.value,
+                value = state.password,
                 onValueChange = {
-                    password.value = it
+                    events.invoke(LoginEvent.OnPasswordChange(it))
                 }
             )
             Spacer_16dp()
@@ -83,7 +89,10 @@ fun LoginScreen(
             )
             Spacer(Modifier.weight(1f))
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .clickable(true) {
+                        navigateToRegister()
+                    },
                 textAlign = TextAlign.Center,
                 text = stringResource(Res.string.login_create_account),
                 style = MaterialTheme.typography.bodyLarge,
@@ -91,10 +100,11 @@ fun LoginScreen(
             )
             Spacer_24dp()
             DefaultButton(
+                progressBarState = state.progressBarState,
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.next),
                 size = ButtonSize.Large,
-                onClick = { }
+                onClick = { events(LoginEvent.Login) }
             )
             Spacer_16dp()
         }
@@ -105,6 +115,9 @@ fun LoginScreen(
 @Composable
 fun PreviewLogin() {
     AppTheme() {
-        LoginScreen({}) { }
+        LoginScreen(
+            state = LoginState(),
+            errors = flow {  }
+        )
     }
 }

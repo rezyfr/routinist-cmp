@@ -43,7 +43,7 @@ internal fun App(context: Context?) {
                     composable<AppNavigation.OnBoarding> {
                         OnBoardingNav(
                             navigateToMain = {
-
+                                println("navigateToMain")
                             }
                         )
                     }
