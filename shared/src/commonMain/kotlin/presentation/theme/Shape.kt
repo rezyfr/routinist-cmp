@@ -45,8 +45,8 @@ fun DefaultButtonWithBorderPrimaryTheme() = buttonColors(
 fun DefaultButtonTheme() = buttonColors(
     containerColor = MaterialTheme.colorScheme.primary,
     contentColor = MaterialTheme.colorScheme.background,
-    // disabledBackgroundColor = MaterialTheme.colorScheme.background,
-    disabledContentColor = MaterialTheme.colorScheme.primary
+    disabledContainerColor = MaterialTheme.colorScheme.primary.copy(0.5f),
+    disabledContentColor = Black20
 )
 
 @Composable

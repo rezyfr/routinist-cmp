@@ -17,8 +17,21 @@
     <string name="login_forgot_password">I forgot my password</string>
     <string name="login_create_account">Don\u0027t have account? Let\u0027s create!</string>
 
+    <!-- Register -->
+    <string name="register_title">Create Account</string>
+    <string name="register_name">Enter your name</string>
+    <string name="register_confirm_password">Enter your password again</string>
+    <string name="register_gender">Choose your gender</string>
+    <string name="register_habit_title">Choose your first habits</string>
+    <string name="register_habit_desc">You may add more habits later</string>
+
     <!-- Common -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="next">Next</string>
+    <string name="name">Name</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="unspecified">Unspecified</string>
 </resources>

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BaseResponse<T>(
-    @SerialName("data") var data: T?,
-    @SerialName("error") var error: String? = "",
-    @SerialName("message") var message: String? = ""
+    @SerialName("data") val data: T?,
+    @SerialName("error") val error: String? = null,
+    @SerialName("message") val message: String? = null
 )

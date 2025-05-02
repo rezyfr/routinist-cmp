@@ -2,9 +2,7 @@ package domain
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import presentation.component.NetworkState
-import presentation.component.ProgressBarState
-import presentation.component.UIComponent
+import presentation.component.core.ProgressBarState
 
 sealed class UiResult<out T> {
     data class Success<T>(val data: T) : UiResult<T>()
@@ -22,10 +20,14 @@ suspend fun <R, T> handleResult(
     execute: suspend () -> Result<T>,
     onSuccess: suspend (T) -> R,
 ): UiResult<R> {
-    execute().onSuccess {
-        return UiResult.Success(onSuccess(it))
-    }.onFailure {
-        return UiResult.Error(Exception(it.message))
+    try {
+        execute().onSuccess {
+            return UiResult.Success(onSuccess(it))
+        }.onFailure {
+            return UiResult.Error(Exception(it.message))
+        }
+    } catch (e: Exception) {
+        return UiResult.Error(Exception(e.message))
     }
     return UiResult.Error(Exception("Something went wrong"))
 }

@@ -1,4 +1,4 @@
-package presentation.component
+package presentation.component.core
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button

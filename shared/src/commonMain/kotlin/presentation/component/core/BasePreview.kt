@@ -1,4 +1,4 @@
-package presentation.component
+package presentation.component.core
 
 import de.drick.compose.hotpreview.HotPreview
 
