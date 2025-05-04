@@ -5,7 +5,6 @@ sealed class NetworkResponse<out T> {
     class Success<T>(val data: BaseResponse<T>) : NetworkResponse<T>()
     class Failure(val throwable: Throwable, val code: Int? = null) : NetworkResponse<Nothing>()
 }
-
 class CustomException constructor(
     val code: Int = 0,
     override val message: String

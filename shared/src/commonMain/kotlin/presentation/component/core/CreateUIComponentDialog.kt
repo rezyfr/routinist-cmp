@@ -1,4 +1,4 @@
-package presentation.component
+package presentation.component.core
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

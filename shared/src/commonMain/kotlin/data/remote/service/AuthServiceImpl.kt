@@ -2,6 +2,7 @@ package data.remote.service
 
 import constants.BASE_URL
 import data.remote.request.LoginRequest
+import data.remote.request.RegisterRequest
 import data.remote.response.BaseResponse
 import data.remote.response.NetworkResponse
 import data.remote.response.TokenResponse
@@ -36,9 +37,25 @@ class AuthServiceImpl(
     override suspend fun register(
         name: String,
         email: String,
-        password: String
+        password: String,
+        gender: String,
+        habitId: Int
     ): NetworkResponse<BaseResponse<TokenResponse?>> {
-        // TODO next
-        return NetworkResponse.Success(BaseResponse(null))
+        return execute {
+            httpClient.post {
+                url {
+                    takeFrom(BASE_URL)
+                    path("api/v1/auth/register")
+                }
+                contentType(ContentType.Application.Json)
+                setBody(RegisterRequest(
+                    email = email,
+                    name = name,
+                    password = password,
+                    gender = gender,
+                    habitId = habitId)
+                )
+            }.body()
+        }
     }
 }

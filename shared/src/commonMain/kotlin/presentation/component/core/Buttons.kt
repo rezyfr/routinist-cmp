@@ -1,4 +1,4 @@
-package presentation.component
+package presentation.component.core
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -31,7 +30,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import presentation.theme.BorderColor
 import presentation.theme.DefaultButtonTheme
-import presentation.theme.DefaultButtonWithBorderPrimaryTheme
 import presentation.theme.DefaultCardColorsTheme
 import presentation.theme.SecondaryButtonTheme
 
@@ -79,7 +77,7 @@ fun ButtonLoading(
     content: @Composable RowScope.() -> Unit
 ) {
     Button(
-        enabled = (enabled || progressBarState != ProgressBarState.Idle),
+        enabled = enabled,
         modifier = modifier,
         interactionSource = interactionSource,
         elevation = elevation,
@@ -126,11 +124,7 @@ fun DefaultButton(
         elevation = if (enableElevation) ButtonDefaults.buttonElevation() else ButtonDefaults.buttonElevation(
             0.dp
         ),
-        colors = if (enabled) DefaultButtonTheme() else DefaultButtonWithBorderPrimaryTheme(),
-        border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.primary
-        ),
+        colors = DefaultButtonTheme(),
         shape = shape,
         onClick = onClick,
         progressBarState = progressBarState,
@@ -138,7 +132,7 @@ fun DefaultButton(
     ) {
         Text(
             text = text,
-            style = style,
+            style = style
         )
     }
 }
@@ -217,9 +211,9 @@ sealed interface ButtonSize {
 
     fun getPadding() : PaddingValues{
         return when (this) {
-            ButtonSize.Large -> PaddingValues(24.dp, 16.dp, 24.dp, 16.dp)
-            ButtonSize.Medium -> PaddingValues(24.dp, 12.dp, 24.dp, 12.dp)
-            ButtonSize.Small -> PaddingValues(24.dp, 8.dp, 24.dp, 8.dp)
+            Large -> PaddingValues(24.dp, 16.dp, 24.dp, 16.dp)
+            Medium -> PaddingValues(24.dp, 12.dp, 24.dp, 12.dp)
+            Small -> PaddingValues(24.dp, 8.dp, 24.dp, 8.dp)
         }
     }
 }

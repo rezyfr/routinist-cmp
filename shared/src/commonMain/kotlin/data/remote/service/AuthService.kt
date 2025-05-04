@@ -5,8 +5,16 @@ import data.remote.response.NetworkResponse
 import data.remote.response.TokenResponse
 
 interface AuthService {
-    suspend fun login(email: String, password: String): NetworkResponse<BaseResponse<TokenResponse?>>
+    suspend fun login(
+        email: String,
+        password: String
+    ): NetworkResponse<BaseResponse<TokenResponse?>>
 
-    suspend fun register(name: String, email: String, password: String): NetworkResponse<BaseResponse<TokenResponse?>>
-
+    suspend fun register(
+        name: String,
+        email: String,
+        password: String,
+        gender: String,
+        habitId: Int
+    ): NetworkResponse<BaseResponse<TokenResponse?>>
 }

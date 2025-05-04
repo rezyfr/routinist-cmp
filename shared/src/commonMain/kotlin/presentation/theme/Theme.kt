@@ -20,6 +20,7 @@ private val lightColorPalette = lightColorScheme(
     onPrimary = Color.White,
     secondary = AccentColor,
     background = BackgroundColor,
+    onBackground = Black100,
     surfaceVariant = Color.White,
     surface = lightSurface,
 

@@ -16,4 +16,13 @@ class AuthRepositoryImpl(
     override suspend fun saveToken(token: String) {
         appDataStore.setValue("token", token)
     }
+    override suspend fun register(
+        name: String,
+        email: String,
+        password: String,
+        gender: String,
+        habitId: Int
+    ): Result<TokenResponse?> {
+        return authService.register(name, email, password, gender, habitId).handleResponse()
+    }
 }

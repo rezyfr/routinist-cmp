@@ -8,10 +8,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import presentation.component.UIComponent
-import presentation.component.ViewEvent
-import presentation.component.ViewSingleAction
-import presentation.component.ViewState
+import presentation.component.core.UIComponent
+import presentation.component.core.ViewEvent
+import presentation.component.core.ViewSingleAction
+import presentation.component.core.ViewState
 
 abstract class BaseViewModel<Event : ViewEvent,
         UiState : ViewState,
