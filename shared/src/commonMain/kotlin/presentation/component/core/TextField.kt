@@ -36,6 +36,7 @@ fun DefaultTextField(
     label: String = "",
     hint: String = "",
     interactionSource: InteractionSource? = null,
+    suffix: String? = null,
     showClearText: Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit = {},
@@ -65,6 +66,8 @@ fun DefaultTextField(
                                     onValueChange("")
                                 }
                             )
+                        } else if (suffix != null) {
+                            Text(suffix, style = MaterialTheme.typography.labelSmall)
                         }
                     },
                     placeholder = @Composable {
@@ -116,15 +119,4 @@ fun PasswordTextField(
         visualTransformation = PasswordVisualTransformation(),
         showClearText = false
     )
-}
-
-@BasePreview
-@Composable
-fun PreviewTextField() {
-    AppTheme {
-        DefaultTextField(
-            hint = "Hint Something",
-            label = "Label Something"
-        )
-    }
 }

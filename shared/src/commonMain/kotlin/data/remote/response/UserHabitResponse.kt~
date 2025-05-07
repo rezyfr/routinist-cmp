@@ -1,0 +1,38 @@
+package data.remote.response
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import android.support.annotation.Keep
+
+@Serializable
+data class UserHabitResponse(
+    @SerialName("goal")
+    val goal: Int?,
+    @SerialName("goal_frequency")
+    val goalFrequency: String?,
+    @SerialName("icon")
+    val icon: String?,
+    @SerialName("id")
+    val id: Int?,
+    @SerialName("name")
+    val name: String?,
+    @SerialName("progress")
+    val progress: Int?,
+    @SerialName("unit")
+    val unit: Unit?,
+    @SerialName("updated_at")
+    val updatedAt: String?
+) {
+    @Keep
+    @Serializable
+    data class Unit(
+        @SerialName("id")
+        val id: Int?,
+        @SerialName("measurement")
+        val measurement: String?,
+        @SerialName("name")
+        val name: String?,
+        @SerialName("symbol")
+        val symbol: String?
+    )
+}

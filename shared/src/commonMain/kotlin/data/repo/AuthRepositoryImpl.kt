@@ -1,6 +1,7 @@
 package data.repo
 
-import data.local.AppDataStore
+import com.russhwolf.settings.Settings
+import constants.SettingsConstant
 import data.remote.response.TokenResponse
 import data.remote.response.handleResponse
 import data.remote.service.AuthService
@@ -8,13 +9,13 @@ import domain.repo.AuthRepository
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
-    private val appDataStore: AppDataStore
+    private val settings: Settings
 ) : AuthRepository {
     override suspend fun login(email: String, password: String) : Result<TokenResponse?> {
         return authService.login(email, password).handleResponse()
     }
     override suspend fun saveToken(token: String) {
-        appDataStore.setValue("token", token)
+        settings.putString(SettingsConstant.ACCESS_TOKEN, token)
     }
     override suspend fun register(
         name: String,
@@ -24,5 +25,8 @@ class AuthRepositoryImpl(
         habitId: Int
     ): Result<TokenResponse?> {
         return authService.register(name, email, password, gender, habitId).handleResponse()
+    }
+    override suspend fun saveEmail(email: String) {
+        settings.putString(SettingsConstant.EMAIL, email)
     }
 }

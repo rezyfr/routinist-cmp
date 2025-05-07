@@ -1,0 +1,4 @@
+package presentation.ui.main.home
+
+class HomeAction {
+}

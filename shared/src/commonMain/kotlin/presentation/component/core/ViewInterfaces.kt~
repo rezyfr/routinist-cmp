@@ -1,0 +1,6 @@
+package presentation.component
+
+
+interface ViewEvent
+interface ViewState
+interface ViewSingleAction

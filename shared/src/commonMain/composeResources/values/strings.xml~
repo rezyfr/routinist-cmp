@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Routinist</string>
+
+    <!-- OnBoarding -->
+    <string name="tagline_title_1">Create\nGood Habits</string>
+    <string name="tagline_title_2">Track\nYour Progress</string>
+    <string name="tagline_title_3">Stay Together\nand Strong</string>
+    <string name="tagline_desc_1">Change your life by slowly adding new healthy habits and sticking to them.</string>
+    <string name="tagline_desc_2">Everyday you become one step closer to your goal. Don’t give up!</string>
+    <string name="tagline_desc_3">Find friends to discuss common topics. Complete challenges together.</string>
+    <string name="onboarding_continue">Continue with E-mail</string>
+    <string name="onboarding_consent">By continuing you agree Terms of Services &amp; Privacy Policy </string>
+
+    <!-- Login -->
+    <string name="login_email">Enter your E-mail</string>
+    <string name="login_password">Enter your Password</string>
+    <string name="login_forgot_password">I forgot my password</string>
+    <string name="login_create_account">Don\u0027t have account? Let\u0027s create!</string>
+
+    <!-- Register -->
+    <string name="register_title">Create Account</string>
+    <string name="register_name">Enter your name</string>
+    <string name="register_confirm_password">Enter your password again</string>
+    <string name="register_gender">Choose your gender</string>
+    <string name="register_habit_title">Choose your first habits</string>
+    <string name="register_habit_desc">You may add more habits later</string>
+
+    <!-- Home -->
+    <string name="home_slogan">Let\u0027s make <habit></habit></string>
+    <!-- Common -->
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="next">Next</string>
+    <string name="name">Name</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="unspecified">Unspecified</string>
+    <string name="view_all">View All</string>
+</resources>

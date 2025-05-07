@@ -1,16 +1,25 @@
 package presentation.ui.onboarding.login
 
 import androidx.lifecycle.viewModelScope
+import com.russhwolf.settings.Settings
+import constants.SettingsConstant
 import domain.handleResult
 import domain.usecase.LoginUseCase
 import kotlinx.coroutines.launch
+import org.koin.core.KoinApplication.Companion.init
 import presentation.component.core.ProgressBarState
 import presentation.component.core.UIComponent
 import presentation.util.BaseViewModel
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val settings: Settings
 ) : BaseViewModel<LoginEvent, LoginState, LoginAction>() {
+
+    init {
+        init()
+    }
+
     override fun setInitialState(): LoginState {
         return LoginState()
     }
@@ -21,6 +30,10 @@ class LoginViewModel(
             is LoginEvent.OnPasswordChange -> onPasswordChange(event.value)
             is LoginEvent.Login -> login()
         }
+    }
+
+    private fun init() {
+        setState { copy(email = settings.getString(SettingsConstant.EMAIL, "")) }
     }
 
     private fun onEmailChange(value: String) {

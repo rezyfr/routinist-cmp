@@ -1,0 +1,19 @@
+package domain.model
+
+import data.remote.response.HabitSummaryResponse
+
+data class HabitSummaryModel(
+    val completedHabits: Int = 0,
+    val totalHabits: Int = 0,
+    val percentage: Float = 0f
+) {
+    companion object {
+        fun fromResponse(response: HabitSummaryResponse): HabitSummaryModel {
+            return HabitSummaryModel(
+                completedHabits = response.completedHabits,
+                totalHabits = response.totalHabits,
+                percentage = response.percentage
+            )
+        }
+    }
+}

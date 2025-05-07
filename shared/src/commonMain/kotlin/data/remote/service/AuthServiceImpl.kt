@@ -1,6 +1,8 @@
 package data.remote.service
 
 import constants.BASE_URL
+import data.remote.ApiClient
+import data.remote.HttpClient.httpClient
 import data.remote.request.LoginRequest
 import data.remote.request.RegisterRequest
 import data.remote.response.BaseResponse
@@ -17,23 +19,20 @@ import io.ktor.http.path
 import io.ktor.http.takeFrom
 
 class AuthServiceImpl(
-    private val httpClient: HttpClient
-): AuthService {
+    private val apiClient: ApiClient
+) : AuthService {
     override suspend fun login(
         email: String,
         password: String
     ): NetworkResponse<BaseResponse<TokenResponse?>> {
         return execute {
-            httpClient.post {
-                url {
-                    takeFrom(BASE_URL)
-                    path("api/v1/auth/login")
-                }
-                contentType(ContentType.Application.Json)
-                setBody(LoginRequest(email = email, password = password))
-            }.body()
+            apiClient.post(
+                endpoint = "api/v1/auth/login",
+                body = LoginRequest(email = email, password = password)
+            )
         }
     }
+
     override suspend fun register(
         name: String,
         email: String,
@@ -42,20 +41,16 @@ class AuthServiceImpl(
         habitId: Int
     ): NetworkResponse<BaseResponse<TokenResponse?>> {
         return execute {
-            httpClient.post {
-                url {
-                    takeFrom(BASE_URL)
-                    path("api/v1/auth/register")
-                }
-                contentType(ContentType.Application.Json)
-                setBody(RegisterRequest(
+            apiClient.post(
+                endpoint = "api/v1/auth/register",
+                body = RegisterRequest(
                     email = email,
                     name = name,
                     password = password,
                     gender = gender,
-                    habitId = habitId)
+                    habitId = habitId
                 )
-            }.body()
+            )
         }
     }
 }

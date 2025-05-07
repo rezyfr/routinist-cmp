@@ -254,6 +254,12 @@ fun LoadingWithLogoScreen() {
     }
 }
 
+@Composable
+fun MainBottomBar(
+    onMenuClick: (String) -> Unit
+) {
+
+}
 
 
 

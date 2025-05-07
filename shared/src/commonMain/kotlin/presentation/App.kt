@@ -16,13 +16,14 @@ import di.appModule
 import org.koin.compose.KoinApplication
 import presentation.navigation.AppNavigation
 import presentation.theme.AppTheme
+import presentation.ui.main.MainNav
 import presentation.ui.onboarding.OnBoardingNav
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun App(context: Context?) {
     KoinApplication(application = {
-        modules(appModule(context))
+        modules(appModule())
     }) {
         setSingletonImageLoaderFactory { context ->
             ImageLoader.Builder(context)
@@ -43,9 +44,14 @@ internal fun App(context: Context?) {
                     composable<AppNavigation.OnBoarding> {
                         OnBoardingNav(
                             navigateToMain = {
-                                println("navigateToMain")
+                                navigator.popBackStack()
+                                navigator.navigate(AppNavigation.Main)
                             }
                         )
+                    }
+
+                    composable<AppNavigation.Main> {
+                        MainNav()
                     }
                 }
             }
