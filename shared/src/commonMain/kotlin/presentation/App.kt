@@ -16,6 +16,7 @@ import di.appModule
 import org.koin.compose.KoinApplication
 import presentation.navigation.AppNavigation
 import presentation.theme.AppTheme
+import presentation.ui.main.MainNav
 import presentation.ui.onboarding.OnBoardingNav
 
 @OptIn(ExperimentalCoilApi::class)
@@ -37,15 +38,18 @@ internal fun App(context: Context?) {
             Box(modifier = Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navigator,
-                    startDestination = AppNavigation.OnBoarding,
+                    startDestination = AppNavigation.Main,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     composable<AppNavigation.OnBoarding> {
                         OnBoardingNav(
                             navigateToMain = {
-                                println("navigateToMain")
+                                navigator.navigate(AppNavigation.Main)
                             }
                         )
+                    }
+                    composable<AppNavigation.Main> {
+                        MainNav()
                     }
                 }
             }

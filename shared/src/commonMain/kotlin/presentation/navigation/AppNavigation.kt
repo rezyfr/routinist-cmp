@@ -7,4 +7,7 @@ sealed interface AppNavigation {
 
     @Serializable
     data object OnBoarding : AppNavigation
+
+    @Serializable
+    data object Main : AppNavigation
 }

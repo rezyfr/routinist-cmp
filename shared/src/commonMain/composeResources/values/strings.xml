@@ -25,6 +25,8 @@
     <string name="register_habit_title">Choose your first habits</string>
     <string name="register_habit_desc">You may add more habits later</string>
 
+    <!-- Home -->
+    <string name="home_slogan">Let\u0027s make <habit></habit></string>
     <!-- Common -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
