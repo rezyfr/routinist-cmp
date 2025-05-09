@@ -36,4 +36,6 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="unspecified">Unspecified</string>
+    <string name="view_all">View All</string>
+    <string name="habits">Habits</string>
 </resources>

@@ -80,6 +80,11 @@ fun DefaultScreenUI(
                     Box(Modifier.fillMaxWidth(1f).height(1.dp).background(BorderColor))
                 }
             }
+        },
+        bottomBar = {
+            if (isRootMain) {
+
+            }
         }
     ) {
         Box(
@@ -254,6 +259,12 @@ fun LoadingWithLogoScreen() {
     }
 }
 
+@Composable
+fun MainBottomBar(
+    onMenuClick: (String) -> Unit
+) {
+
+}
 
 
 
