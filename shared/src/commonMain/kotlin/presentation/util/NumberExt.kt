@@ -1,0 +1,5 @@
+package presentation.util
+
+fun Number.noDecimal() : String {
+    return this.toString().split(".")[0]
+}

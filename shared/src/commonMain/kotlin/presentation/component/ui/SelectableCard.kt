@@ -16,8 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import presentation.component.core.BasePreview
-import presentation.theme.AppTheme
 import presentation.theme.Black10
 import presentation.theme.Black100
 

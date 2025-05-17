@@ -1,0 +1,12 @@
+package presentation.ui.main.home
+
+import domain.model.HabitSummaryModel
+import domain.model.UserHabitModel
+import presentation.component.core.ProgressBarState
+import presentation.component.core.ViewState
+
+data class HomeState(
+    val summary : HabitSummaryModel = HabitSummaryModel(),
+    val today: List<UserHabitModel> = emptyList(),
+    val progressBarState: ProgressBarState = ProgressBarState.Idle
+) : ViewState

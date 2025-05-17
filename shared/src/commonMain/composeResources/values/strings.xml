@@ -25,6 +25,12 @@
     <string name="register_habit_title">Choose your first habits</string>
     <string name="register_habit_desc">You may add more habits later</string>
 
+    <!-- Home -->
+    <string name="home_slogan">Let\u0027s make habits together!</string>
+    <string name="update_progress">Update Progress</string>
+    <string name="progress">Progress</string>
+    <string name="progress_hint">Enter your progress</string>
+
     <!-- Common -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
@@ -34,4 +40,6 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="unspecified">Unspecified</string>
+    <string name="view_all">View All</string>
+    <string name="habits">Habits</string>
 </resources>

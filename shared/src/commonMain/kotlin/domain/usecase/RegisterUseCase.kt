@@ -20,6 +20,9 @@ class RegisterUseCase(
                 )
             },
             onSuccess = {
+                if (it?.token != null) {
+                    authRepository.saveToken(it.token)
+                }
             }
         )
     }

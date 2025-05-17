@@ -21,9 +21,7 @@ object HttpClient {
             requestTimeoutMillis = timeout
             socketTimeoutMillis = timeout
         }
-
-
-
+        
         install(ResponseObserver) {
             onResponse { response ->
                 println("AppDebug HTTP ResponseObserver status: ${response.status.value}")
@@ -41,6 +39,18 @@ object HttpClient {
                 }
             }
         }
+        // for refresh token
+//        install(Auth) {
+//
+//            bearer {
+//                loadTokens {
+//                    BearerTokens(
+//                        accessToken = settings.getString(SettingsConstant.ACCESS_TOKEN, ""),
+//                        refreshToken = ""
+//                    )
+//                }
+//            }
+//        }
         install(ContentNegotiation) {
             json(Json {
                 explicitNulls = false

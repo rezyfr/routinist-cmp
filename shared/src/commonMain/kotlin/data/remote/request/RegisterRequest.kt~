@@ -1,0 +1,11 @@
+package data.remote.request
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RegisterRequest(
+    val name: String,
+    val email: String,
+    val password: String,
+    val habitId: Int
+)

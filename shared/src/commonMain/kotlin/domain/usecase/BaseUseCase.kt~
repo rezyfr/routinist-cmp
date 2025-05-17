@@ -1,0 +1,15 @@
+package domain.usecase
+
+import data.local.AppDataStore
+import data.remote.response.BaseResponse
+import domain.DataState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import presentation.component.NetworkState
+import presentation.component.ProgressBarState
+import presentation.component.UIComponent
+
+interface UseCase<out R, in P> {
+    suspend fun execute(params: P): R = throw NotImplementedError()
+    fun executeFlow(params: P?): Flow<R> = throw NotImplementedError()
+}

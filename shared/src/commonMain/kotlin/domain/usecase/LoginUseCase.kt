@@ -13,6 +13,7 @@ class LoginUseCase(
             onSuccess = {
                 if (it?.token != null) {
                     authRepository.saveToken(it.token)
+                    authRepository.saveEmail(params.first)
                 }
             }
         )

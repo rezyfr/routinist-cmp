@@ -16,13 +16,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import presentation.component.core.BasePreview
 import presentation.component.core.ButtonSize
 import presentation.component.core.DefaultButton
 import presentation.component.core.DefaultScreenUI
@@ -30,20 +26,16 @@ import presentation.component.core.DefaultTextField
 import presentation.component.core.PasswordTextField
 import presentation.component.core.Spacer_16dp
 import presentation.component.core.Spacer_24dp
-import presentation.component.core.UIComponent
-import presentation.theme.AppTheme
 import presentation.theme.Black60
 import routinist.shared.generated.resources.Res
-import routinist.shared.generated.resources.onboarding_continue
-import routinist.shared.generated.resources.login_email
 import routinist.shared.generated.resources.email
-import routinist.shared.generated.resources.login_password
-import routinist.shared.generated.resources.login_forgot_password
-import routinist.shared.generated.resources.password
 import routinist.shared.generated.resources.login_create_account
+import routinist.shared.generated.resources.login_email
+import routinist.shared.generated.resources.login_forgot_password
+import routinist.shared.generated.resources.login_password
 import routinist.shared.generated.resources.next
+import routinist.shared.generated.resources.onboarding_continue
 import routinist.shared.generated.resources.password
-import kotlin.invoke
 
 @Composable
 fun LoginScreen(

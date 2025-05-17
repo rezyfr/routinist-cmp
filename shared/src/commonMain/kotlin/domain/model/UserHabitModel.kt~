@@ -1,0 +1,12 @@
+package domain.model
+
+data class UserHabitModel(
+    val goal: Int,
+    val goalFrequency: String,
+    val icon: String,
+    val id: Int,
+    val name: String,
+    val progress: Int,
+    val unit: UnitModel,
+    val updatedAt: String
+)

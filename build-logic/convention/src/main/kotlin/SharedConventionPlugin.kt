@@ -53,11 +53,12 @@ class SharedConventionPlugin : Plugin<Project> {
                         @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                         implementation(composeDeps.components.resources)
                         api(composeDeps.materialIconsExtended)
-                        implementation(composeDeps.components.uiToolingPreview)
+                        implementation(composeDeps.components.uiToolingPreview) 
                         implementation(libs.findLibrary("ktor.core").get())
                         implementation(libs.findLibrary("ktor.logging").get())
                         implementation(libs.findLibrary("ktor.serialization").get())
                         implementation(libs.findLibrary("ktor.negotiation").get())
+                        implementation(libs.findLibrary("ktor.client.auth").get())
                         implementation(libs.findLibrary("kotlinx.serialization.json").get())
                         implementation(libs.findLibrary("kotlinx.datetime").get())
                         implementation(libs.findLibrary("kotlinx.coroutines.core").get())
@@ -65,10 +66,14 @@ class SharedConventionPlugin : Plugin<Project> {
                         implementation(
                             libs.findLibrary("androidx.lifecycle.viewmodel.compose").get()
                         )
+                        implementation(libs.findLibrary("multiplatformSettings").get())
+                        implementation(libs.findLibrary("composable.core").get())
+
                         api(libs.findLibrary("koin.core").get())
                         api(libs.findLibrary("koin.compose").get())
                         api(libs.findLibrary("coil3").get())
                         api(libs.findLibrary("coil3.network").get())
+
                     }
                 }
 

@@ -40,7 +40,7 @@ kotlin {
         }
         commonMain {
             dependencies {
-                implementation(libs.hotpreview)
+
             }
         }
 

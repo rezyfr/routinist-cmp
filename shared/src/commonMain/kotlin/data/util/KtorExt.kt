@@ -3,6 +3,8 @@ package data.util
 import data.remote.response.BaseResponse
 import data.remote.response.NetworkResponse
 import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
@@ -17,7 +19,8 @@ suspend inline fun <reified T> execute(
 
         if (response.status.isSuccess()) {
             // Try to parse as T (e.g., BaseResponse<List<HabitResponse>>)
-            val body: T = Json.decodeFromString(rawBody)
+            val json = Json { ignoreUnknownKeys = true}
+            val body: T = json.decodeFromString(rawBody)
             NetworkResponse.Success(BaseResponse(data = body))
         } else {
             // Try to parse error details
@@ -32,4 +35,8 @@ suspend inline fun <reified T> execute(
     } catch (e: Exception) {
         NetworkResponse.Failure(e)
     }
+}
+
+fun HttpRequestBuilder.setAuthHeader(token: String) {
+    header("Authorization", "Bearer $token")
 }

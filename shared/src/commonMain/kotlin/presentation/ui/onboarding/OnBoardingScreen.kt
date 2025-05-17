@@ -38,7 +38,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.drick.compose.hotpreview.HotPreview
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -246,10 +245,4 @@ private fun Dot(
             .clip(shape)
             .background(color)
     )
-}
-
-@HotPreview(heightDp = 852, widthDp = 393)
-@Composable
-fun PreviewDot() {
-    OnBoardingScreen {  }
 }
