@@ -30,6 +30,7 @@ fun OnBoardingNav(
     ) {
         composable<OnBoardingNavigation.OnBoarding> {
             OnBoardingScreen(
+                navigateToMain = { navigateToMain() },
                 navigateToLogin = {
                     navigator.navigate(OnBoardingNavigation.Login)
                 }

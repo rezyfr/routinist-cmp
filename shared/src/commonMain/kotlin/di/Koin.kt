@@ -14,6 +14,7 @@ import data.repo.AuthRepositoryImpl
 import data.repo.HabitRepositoryImpl
 import domain.repo.AuthRepository
 import domain.repo.HabitRepository
+import domain.usecase.CheckTokenUseCase
 import domain.usecase.CreateProgressUseCase
 import domain.usecase.GetHabitSummaryUseCase
 import domain.usecase.GetRandomHabitUseCase
@@ -24,6 +25,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import presentation.ui.main.MainViewModel
 import presentation.ui.main.home.HomeViewModel
+import presentation.ui.onboarding.OnBoardingViewModel
 import presentation.ui.onboarding.login.LoginViewModel
 import presentation.ui.onboarding.register.RegisterViewModel
 
@@ -44,9 +46,11 @@ fun appModule() = module {
     factory { GetHabitSummaryUseCase(get()) }
     factory { GetTodayHabitsUseCase(get()) }
     factory { CreateProgressUseCase(get())}
+    factory { CheckTokenUseCase(get())}
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
     factory { HomeViewModel(get(),get()) }
     factory { MainViewModel(get()) }
+    factory { OnBoardingViewModel(get()) }
 }
