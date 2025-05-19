@@ -38,11 +38,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.koin.compose.koinInject
 import presentation.component.core.ButtonSize
 import presentation.component.core.ButtonType
 import presentation.component.core.DefaultButtonWithIcon
@@ -54,6 +56,7 @@ import presentation.component.core.Spacer_32dp
 import presentation.component.core.Spacer_8dp
 import presentation.theme.PagerDotColor
 import presentation.theme.Primary40
+import presentation.ui.onboarding.login.LoginAction
 import routinist.shared.generated.resources.Res
 import routinist.shared.generated.resources.ic_login
 import routinist.shared.generated.resources.img_onboarding_background
@@ -72,8 +75,21 @@ import routinist.shared.generated.resources.tagline_title_3
 
 @Composable
 fun OnBoardingScreen(
+    viewModel: OnBoardingViewModel = koinInject(),
+    navigateToMain: () -> Unit,
     navigateToLogin: () -> Unit
 ) {
+
+    LaunchedEffect(viewModel) {
+        viewModel.action.onEach { effect ->
+            when (effect) {
+                OnBoardingAction.NavigateToMain -> {
+                    navigateToMain()
+                }
+            }
+        }.collect {}
+    }
+
     val pagerState = rememberPagerState { 3 }
     val onBoardingContent = arrayOf<Triple<DrawableResource, StringResource, StringResource>>(
         Triple(

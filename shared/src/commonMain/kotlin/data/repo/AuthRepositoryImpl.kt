@@ -29,4 +29,12 @@ class AuthRepositoryImpl(
     override suspend fun saveEmail(email: String) {
         settings.putString(SettingsConstant.EMAIL, email)
     }
+
+    override suspend fun checkToken(): Result<String?> {
+        val response = authService.checkToken().handleResponse()
+        if (response.isFailure) {
+            settings.remove(SettingsConstant.ACCESS_TOKEN)
+        }
+        return response
+    }
 }

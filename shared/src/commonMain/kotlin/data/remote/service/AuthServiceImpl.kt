@@ -1,22 +1,12 @@
 package data.remote.service
 
-import constants.BASE_URL
 import data.remote.ApiClient
-import data.remote.HttpClient.httpClient
 import data.remote.request.LoginRequest
 import data.remote.request.RegisterRequest
 import data.remote.response.BaseResponse
 import data.remote.response.NetworkResponse
 import data.remote.response.TokenResponse
 import data.util.execute
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.path
-import io.ktor.http.takeFrom
 
 class AuthServiceImpl(
     private val apiClient: ApiClient
@@ -28,6 +18,7 @@ class AuthServiceImpl(
         return execute {
             apiClient.post(
                 endpoint = "api/v1/auth/login",
+                auth = false,
                 body = LoginRequest(email = email, password = password)
             )
         }
@@ -43,6 +34,7 @@ class AuthServiceImpl(
         return execute {
             apiClient.post(
                 endpoint = "api/v1/auth/register",
+                auth = false,
                 body = RegisterRequest(
                     email = email,
                     name = name,
@@ -50,6 +42,14 @@ class AuthServiceImpl(
                     gender = gender,
                     habitId = habitId
                 )
+            )
+        }
+    }
+
+    override suspend fun checkToken(): NetworkResponse<BaseResponse<String?>> {
+        return execute {
+            apiClient.get(
+                endpoint = "api/v1/auth/protected/check"
             )
         }
     }
