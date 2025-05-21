@@ -51,7 +51,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,7 +62,6 @@ import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberBottomSheetState
 import domain.model.HabitProgressModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -84,19 +82,16 @@ import presentation.theme.DefaultCardColorsTheme
 import presentation.theme.DefaultNavigationBarItemTheme
 import presentation.theme.primaryGradient
 import presentation.ui.main.home.HomeScreen
-import presentation.ui.onboarding.login.LoginAction
-import presentation.ui.onboarding.login.LoginEvent
 import presentation.util.noDecimal
 import routinist.shared.generated.resources.Res
-import routinist.shared.generated.resources.next
 import routinist.shared.generated.resources.progress
 import routinist.shared.generated.resources.progress_hint
 import routinist.shared.generated.resources.update_progress
-import kotlin.math.exp
 
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = koinInject(),
+    navigateToCreateHabit: () -> Unit,
 ) {
     val navBottomBarController = rememberNavController()
     val bottomSheetState = rememberBottomSheetState(
@@ -145,7 +140,8 @@ fun MainScreen(
                     modifier = Modifier.onGloballyPositioned {
                         navBarHeight = it.size.height
                     }.offset { IntOffset(x = 0, navBarHeight.times(sheetExpandProgress).toInt()) },
-                    navBottomBarController
+                    navigateToCreateHabit = navigateToCreateHabit,
+                    navController = navBottomBarController
                 )
             }
         }
@@ -290,6 +286,7 @@ fun ProgressBottomSheet(
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
+    navigateToCreateHabit: () -> Unit,
     navController: NavController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -350,6 +347,9 @@ fun BottomNavigationBar(
                     .background(
                         brush = Brush.verticalGradient(colors = primaryGradient)
                     )
+                    .clickable {
+                        navigateToCreateHabit.invoke()
+                    }
             ) {
                 Icon(
                     Icons.Rounded.Add,

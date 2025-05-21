@@ -7,12 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import presentation.navigation.AppNavigation
-import presentation.navigation.OnBoardingNavigation
-import presentation.ui.main.home.HomeScreen
-import presentation.ui.onboarding.OnBoardingScreen
+import presentation.ui.habit.create.CreateHabitScreen
 
 @Composable
-fun MainNav() {
+fun MainNav(
+) {
     val navigator = rememberNavController()
 
     NavHost(
@@ -21,7 +20,12 @@ fun MainNav() {
         modifier = Modifier.fillMaxSize()
     ) {
         composable<AppNavigation.Main> {
-            MainScreen()
+            MainScreen {
+                navigator.navigate(AppNavigation.CreateHabit)
+            }
+        }
+        composable<AppNavigation.CreateHabit> {
+            CreateHabitScreen()
         }
     }
 }

@@ -1,6 +1,5 @@
 package data.remote.service
 
-import com.russhwolf.settings.Settings
 import data.remote.ApiClient
 import data.remote.request.CreateProgressRequest
 import data.remote.response.BaseResponse

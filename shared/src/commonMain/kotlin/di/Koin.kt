@@ -23,6 +23,7 @@ import domain.usecase.LoginUseCase
 import domain.usecase.RegisterUseCase
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+import presentation.ui.habit.create.CreateHabitViewModel
 import presentation.ui.main.MainViewModel
 import presentation.ui.main.home.HomeViewModel
 import presentation.ui.onboarding.OnBoardingViewModel
@@ -53,4 +54,5 @@ fun appModule() = module {
     factory { HomeViewModel(get(),get()) }
     factory { MainViewModel(get()) }
     factory { OnBoardingViewModel(get()) }
+    factory { CreateHabitViewModel(get()) }
 }
