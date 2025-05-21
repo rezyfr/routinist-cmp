@@ -12,6 +12,7 @@ import data.remote.service.HabitService
 import data.remote.service.HabitServiceImpl
 import data.repo.AuthRepositoryImpl
 import data.repo.HabitRepositoryImpl
+import domain.model.HabitModel
 import domain.repo.AuthRepository
 import domain.repo.HabitRepository
 import domain.usecase.CheckTokenUseCase
@@ -54,5 +55,5 @@ fun appModule() = module {
     factory { HomeViewModel(get(),get()) }
     factory { MainViewModel(get(),get()) }
     factory { OnBoardingViewModel(get()) }
-    factory { CreateHabitViewModel(get()) }
+    factory { CreateHabitViewModel() }
 }

@@ -1,7 +1,9 @@
 package domain.model
 
 import data.remote.response.HabitResponse
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HabitModel(
     val defaultGoal: Int,
     val id: Int,

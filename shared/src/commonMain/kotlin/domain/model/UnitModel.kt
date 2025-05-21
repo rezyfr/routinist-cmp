@@ -1,7 +1,9 @@
 package domain.model
 
 import data.remote.response.UnitResponse
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UnitModel(
     val id: Int,
     val measurement: String,

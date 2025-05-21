@@ -2,6 +2,7 @@ package presentation.component.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +50,34 @@ fun <T> SelectableCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = emoji, style = MaterialTheme.typography.displayMedium)
+            Text(text = label, style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+@Composable
+fun <T> SelectableText(
+    modifier: Modifier = Modifier,
+    id: T,
+    label: String,
+    isSelected: Boolean,
+    onClick: (T) -> Unit = {}
+) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        modifier = modifier,
+        onClick = {
+            onClick.invoke(id)
+        },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Black100
+        ),
+        border = if (isSelected) BorderStroke(
+            2.dp,
+            MaterialTheme.colorScheme.primary
+        ) else BorderStroke(1.dp, Black10)
+    ) {
+        Box(Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
             Text(text = label, style = MaterialTheme.typography.bodyLarge)
         }
     }

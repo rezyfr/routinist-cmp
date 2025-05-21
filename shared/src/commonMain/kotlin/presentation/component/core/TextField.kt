@@ -67,7 +67,7 @@ fun DefaultTextField(
                                 }
                             )
                         } else if (suffix != null) {
-                            Text(suffix, style = MaterialTheme.typography.labelSmall)
+                            Text(suffix, style = MaterialTheme.typography.labelMedium)
                         }
                     },
                     placeholder = @Composable {

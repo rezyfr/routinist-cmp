@@ -187,7 +187,9 @@ fun MainScreen(
             sheetState = bottomSheetState,
             events = mainViewModel::setEvent,
             sheet = currentBottomSheet,
-            onCloseClick = { expandBottomSheet(false) },
+            onCloseClick = {
+                expandBottomSheet(false)
+                           },
             state = mainViewModel.state.value
         )
     }
@@ -204,7 +206,10 @@ fun MainSheet(
     sheet?.let {
         DefaultBottomSheet(
             title = stringResource(sheet.title),
-            onCloseClick = onCloseClick,
+            onCloseClick = {
+                events.invoke(MainEvent.ResetSheetState(it))
+                onCloseClick.invoke()
+            },
             sheetState = sheetState
         ) {
             when (it) {

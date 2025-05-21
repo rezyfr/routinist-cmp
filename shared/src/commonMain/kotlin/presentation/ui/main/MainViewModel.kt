@@ -7,7 +7,7 @@ import domain.usecase.GetRandomHabitUseCase
 import kotlinx.coroutines.launch
 import presentation.component.core.ProgressBarState
 import presentation.component.core.UIComponent
-import presentation.ui.main.MainAction.NavigateToCreateHabit
+import presentation.navigation.MainSheet
 import presentation.ui.main.MainAction.ShowCreateHabitSheet
 import presentation.util.BaseViewModel
 
@@ -42,12 +42,72 @@ class MainViewModel(
                 }
             }
 
-            is MainEvent.OnCreateHabitChosen -> {
-                setAction { NavigateToCreateHabit(event.data) }
+            is MainEvent.OnHabitChosen -> {
+                setState {
+                    copy(
+                        createHabitSheetState = createHabitSheetState.copy(
+                            selectedHabit = event.data,
+                            selectedUnit = event.data.units.first(),
+                            goal = event.data.defaultGoal.toString()
+                        )
+                    )
+                }
             }
 
             is MainEvent.ShowCreateHabitSheet -> {
                 getPopularHabits()
+            }
+
+            is MainEvent.OnGoalChange -> {
+                setState {
+                    copy(
+                        createHabitSheetState = createHabitSheetState.copy(
+                            goal = event.goal
+                        )
+                    )
+                }
+            }
+
+            is MainEvent.OnUnitChosen -> {
+                setState {
+                    copy(createHabitSheetState = createHabitSheetState.copy(selectedUnit = event.unit))
+                }
+            }
+
+            is MainEvent.OnCreateHabit -> {
+                viewModelScope.launch {
+                    setState {
+                        copy(createHabitSheetState = createHabitSheetState.copy(progressBarState = ProgressBarState.ButtonLoading))
+                    }
+                }
+            }
+
+            is MainEvent.ResetSheetState -> {
+                when (event.sheet) {
+                    MainSheet.CreateHabit -> {
+                        setState {
+                            copy(
+                                createHabitSheetState = createHabitSheetState.copy(
+                                    selectedHabit = null,
+                                    selectedUnit = null,
+                                    goal = ""
+                                )
+                            )
+                        }
+                    }
+
+                    MainSheet.CreateProgress -> {
+                        setState {
+                            copy(
+                                progressSheetState = progressSheetState.copy(
+                                    data = null,
+                                    progress = "",
+                                    progressBarState = ProgressBarState.Idle
+                                )
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -85,6 +145,14 @@ class MainViewModel(
                         setError { UIComponent.ToastSimple(it.message.orEmpty()) }
                     },
                     ifSuccess = {
+                        setState {
+                            copy(
+                                createHabitSheetState = createHabitSheetState.copy(
+                                    progressBarState = ProgressBarState.Idle,
+                                    popularHabits = it
+                                )
+                            )
+                        }
                         setAction { ShowCreateHabitSheet(it) }
                     }
                 )

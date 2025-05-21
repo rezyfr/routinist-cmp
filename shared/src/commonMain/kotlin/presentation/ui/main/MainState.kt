@@ -2,6 +2,7 @@ package presentation.ui.main
 
 import domain.model.HabitModel
 import domain.model.HabitProgressModel
+import domain.model.UnitModel
 import presentation.component.core.ProgressBarState
 import presentation.component.core.ViewState
 
@@ -18,7 +19,10 @@ data class MainState(
 
     data class CreateHabitSheetState(
         val progressBarState: ProgressBarState = ProgressBarState.Idle,
-        val popularHabits: List<HabitModel> = emptyList()
+        val popularHabits: List<HabitModel> = emptyList(),
+        val selectedHabit: HabitModel? = null,
+        val selectedUnit: UnitModel? = null,
+        val goal: String = ""
     )
 }
 

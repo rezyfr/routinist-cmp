@@ -1,5 +1,6 @@
 package presentation.navigation
 
+import domain.model.HabitModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,5 +13,7 @@ sealed interface AppNavigation {
     data object Main : AppNavigation
 
     @Serializable
-    data object CreateHabit : AppNavigation
+    data class CreateHabit(
+        val habit: String
+    ) : AppNavigation
 }
