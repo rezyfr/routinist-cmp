@@ -1,16 +1,19 @@
 package presentation.ui.main
 
 import androidx.lifecycle.viewModelScope
-import constants.CUSTOM_TAG
 import domain.handleResult
 import domain.usecase.CreateProgressUseCase
+import domain.usecase.GetRandomHabitUseCase
 import kotlinx.coroutines.launch
 import presentation.component.core.ProgressBarState
 import presentation.component.core.UIComponent
+import presentation.ui.main.MainAction.NavigateToCreateHabit
+import presentation.ui.main.MainAction.ShowCreateHabitSheet
 import presentation.util.BaseViewModel
 
 class MainViewModel(
-    private val createProgressUseCase: CreateProgressUseCase
+    private val createProgressUseCase: CreateProgressUseCase,
+    private val getRandomHabitUseCase: GetRandomHabitUseCase
 ) : BaseViewModel<MainEvent, MainState, MainAction>() {
     override fun setInitialState(): MainState {
         return MainState()
@@ -38,6 +41,14 @@ class MainViewModel(
                     )
                 }
             }
+
+            is MainEvent.OnCreateHabitChosen -> {
+                setAction { NavigateToCreateHabit(event.data) }
+            }
+
+            is MainEvent.ShowCreateHabitSheet -> {
+                getPopularHabits()
+            }
         }
     }
 
@@ -56,6 +67,28 @@ class MainViewModel(
                     setState { copy(progressSheetState = progressSheetState.copy(progressBarState = ProgressBarState.Idle)) }
                 }
             )
+        }
+    }
+
+    private fun getPopularHabits() {
+        viewModelScope.launch {
+            viewModelScope.launch {
+                setState {
+                    copy(
+                        createHabitSheetState = createHabitSheetState.copy(
+                            progressBarState = ProgressBarState.ScreenLoading
+                        )
+                    )
+                }
+                getRandomHabitUseCase.execute(Unit).handleResult(
+                    ifError = {
+                        setError { UIComponent.ToastSimple(it.message.orEmpty()) }
+                    },
+                    ifSuccess = {
+                        setAction { ShowCreateHabitSheet(it) }
+                    }
+                )
+            }
         }
     }
 }

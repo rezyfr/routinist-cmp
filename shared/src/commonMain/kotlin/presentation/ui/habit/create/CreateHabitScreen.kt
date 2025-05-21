@@ -39,6 +39,7 @@ import presentation.theme.AppTheme
 import presentation.theme.Black10
 import presentation.theme.Black100
 import presentation.theme.Black60
+import presentation.ui.main.bottomsheet.PopularHabitCard
 import routinist.shared.generated.resources.Res
 import routinist.shared.generated.resources.create_habit_title
 import routinist.shared.generated.resources.habit
@@ -76,7 +77,7 @@ fun CreateHabitContent(
     Column(Modifier.fillMaxSize()) {
         Text(stringResource(Res.string.habit), style = MaterialTheme.typography.labelSmall)
         Spacer_8dp()
-        LazyRow(Modifier.fillMaxWidth()) {
+        LazyRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(state.popularHabits, { it.id }) { habit ->
                 val isSelected = selectedItem.value == habit.id
 
@@ -91,74 +92,5 @@ fun CreateHabitContent(
                 )
             }
         }
-    }
-}
-@Composable
-fun PopularHabitCard(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean,
-    habit: HabitModel,
-    onClick: (Int) -> Unit,
-) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        modifier = modifier,
-        onClick = {
-            onClick.invoke(habit.id)
-        },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(habit.color),
-            contentColor = Black100
-        ),
-        border = if (isSelected) BorderStroke(
-            2.dp,
-            MaterialTheme.colorScheme.primary
-        ) else BorderStroke(1.dp, Black10)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Box(
-                Modifier.background(Color.White, RoundedCornerShape(12.dp))
-                    .padding(vertical = 4.dp, horizontal = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = habit.icon, style = MaterialTheme.typography.headlineSmall)
-            }
-            Spacer_8dp()
-            Text(text = habit.name, style = MaterialTheme.typography.bodyLarge)
-            Text(
-                text = "${habit.defaultGoal} ${habit.units.first().symbol}",
-                style = MaterialTheme.typography.labelMedium.copy(color = Black60)
-            )
-        }
-    }
-}
-@Preview()
-@Composable
-fun PreviewPopularCard() {
-    AppTheme {
-        PopularHabitCard(
-            isSelected = false,
-            habit = HabitModel(
-                id = 1,
-                name = "Sleep",
-                icon = "🛌",
-                units = listOf(
-                    UnitModel(
-                        id = 1,
-                        measurement = "distance",
-                        symbol = "km",
-                        name = "metre"
-                    )
-                ),
-                defaultGoal = 8,
-                measurement = "distance",
-                color = 0xFFE8D3FF
-            ),
-            onClick = {
-            },
-        )
     }
 }
