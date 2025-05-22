@@ -2,6 +2,7 @@ package presentation.component.core
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,9 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import presentation.theme.BorderColor
 import presentation.theme.DefaultButtonTheme
 import presentation.theme.DefaultCardColorsTheme
@@ -177,7 +180,7 @@ fun DefaultButtonWithIcon(
     type: ButtonType = ButtonType.Primary,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     shape: Shape = MaterialTheme.shapes.extraLarge,
-    icon: ImageVector,
+    icon: Painter,
     text: String,
     size: ButtonSize = ButtonSize.Medium,
     onClick: () -> Unit
@@ -190,7 +193,7 @@ fun DefaultButtonWithIcon(
         contentPadding = size.getPadding(),
         onClick = onClick
     ) {
-        Icon(icon, null)
+        Image(icon, null,)
         Spacer_4dp()
         Text(
             text = text,

@@ -53,7 +53,7 @@ fun HomeScreen(
     refresh: Boolean,
     showProgressSheet: (HabitProgressModel) -> Unit,
 ) {
-    LaunchedEffect(refresh) {
+    LaunchedEffect(refresh || viewModel.state.value.updatingProgressId == -1L) {
         viewModel.getTodayHabits()
         viewModel.getHabitSummary()
     }
@@ -83,6 +83,7 @@ fun HomeContent(
             summary = state.summary,
             today = state.today,
             calendars = state.calendars,
+            updatingProgressId = state.updatingProgressId,
             events = events,
             showProgressSheet = {
                 showProgressSheet.invoke(it)
@@ -134,7 +135,8 @@ fun HomeMainSection(
     today: List<HabitProgressModel>,
     calendars: List<Pair<String, String>> = emptyList(),
     showProgressSheet: (HabitProgressModel) -> Unit,
-    events: (HomeEvent) -> Unit
+    events: (HomeEvent) -> Unit,
+    updatingProgressId: Long
 ) {
     LazyRow(
         Modifier.fillMaxWidth(),
@@ -157,14 +159,23 @@ fun HomeMainSection(
         text = stringResource(Res.string.habits)
     )
     Spacer_4dp()
+    println("Recompose main section")
     LazyColumn(
         Modifier.fillMaxWidth().padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(today) {
-            HabitProgressItem(data = it) {
-                showProgressSheet.invoke(it)
-            }
+        items(today, key = { it.id }) {
+            println("Recompose main items ${it.id}")
+            HabitProgressItem(
+                data = it,
+                onClickFinish = {
+                    events.invoke(HomeEvent.OnProgressFinished(it))
+                },
+                onClickAdd = {
+                    showProgressSheet.invoke(it)
+                },
+                isLoading = updatingProgressId == it.id
+            )
         }
     }
 }

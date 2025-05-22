@@ -153,7 +153,7 @@ fun OnBoardingScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 text = stringResource(Res.string.onboarding_continue),
                 style = MaterialTheme.typography.bodyMedium,
-                icon = vectorResource(Res.drawable.ic_login),
+                icon = painterResource(Res.drawable.ic_login),
                 type = ButtonType.Secondary,
                 size = ButtonSize.Large
             ) {

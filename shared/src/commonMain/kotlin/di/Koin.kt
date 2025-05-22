@@ -54,7 +54,7 @@ fun appModule() = module {
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
-    factory { HomeViewModel(get(),get()) }
+    factory { HomeViewModel(get(),get(),get()) }
     factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
     factory { CreateHabitViewModel() }
