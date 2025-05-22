@@ -16,6 +16,7 @@ import domain.model.HabitModel
 import domain.repo.AuthRepository
 import domain.repo.HabitRepository
 import domain.usecase.CheckTokenUseCase
+import domain.usecase.CreateHabitUseCase
 import domain.usecase.CreateProgressUseCase
 import domain.usecase.GetHabitSummaryUseCase
 import domain.usecase.GetRandomHabitUseCase
@@ -49,11 +50,12 @@ fun appModule() = module {
     factory { GetTodayHabitsUseCase(get()) }
     factory { CreateProgressUseCase(get())}
     factory { CheckTokenUseCase(get())}
+    factory { CreateHabitUseCase(get()) }
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
     factory { HomeViewModel(get(),get()) }
-    factory { MainViewModel(get(),get()) }
+    factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
     factory { CreateHabitViewModel() }
 }

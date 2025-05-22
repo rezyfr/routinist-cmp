@@ -11,4 +11,5 @@ interface HabitService {
     suspend fun getTodayHabits() : NetworkResponse<BaseResponse<List<UserHabitResponse>>>
     suspend fun getHabitSummary() : NetworkResponse<BaseResponse<HabitSummaryResponse>>
     suspend fun postUpdateProgress(id: Long, progress: Float) : NetworkResponse<BaseResponse<String>>
+    suspend fun createHabit(habitId: Long, unitId: Long, goal: Float) : NetworkResponse<BaseResponse<String>>
 }

@@ -2,6 +2,7 @@ package presentation.ui.main
 
 import androidx.lifecycle.viewModelScope
 import domain.handleResult
+import domain.usecase.CreateHabitUseCase
 import domain.usecase.CreateProgressUseCase
 import domain.usecase.GetRandomHabitUseCase
 import kotlinx.coroutines.launch
@@ -13,7 +14,8 @@ import presentation.util.BaseViewModel
 
 class MainViewModel(
     private val createProgressUseCase: CreateProgressUseCase,
-    private val getRandomHabitUseCase: GetRandomHabitUseCase
+    private val getRandomHabitUseCase: GetRandomHabitUseCase,
+    private val createHabitUseCase: CreateHabitUseCase
 ) : BaseViewModel<MainEvent, MainState, MainAction>() {
     override fun setInitialState(): MainState {
         return MainState()
@@ -75,11 +77,7 @@ class MainViewModel(
             }
 
             is MainEvent.OnCreateHabit -> {
-                viewModelScope.launch {
-                    setState {
-                        copy(createHabitSheetState = createHabitSheetState.copy(progressBarState = ProgressBarState.ButtonLoading))
-                    }
-                }
+                createHabit()
             }
 
             is MainEvent.ResetSheetState -> {
@@ -157,6 +155,36 @@ class MainViewModel(
                     }
                 )
             }
+        }
+    }
+
+    private fun createHabit() {
+        viewModelScope.launch {
+            setState {
+                copy(createHabitSheetState = createHabitSheetState.copy(progressBarState = ProgressBarState.ButtonLoading))
+            }
+            val request = state.value.createHabitSheetState
+            if (request.selectedHabit == null || request.selectedUnit == null) return@launch
+            createHabitUseCase.execute(
+                CreateHabitUseCase.Params(
+                    habitId = request.selectedHabit.id.toLong(),
+                    unitId = request.selectedUnit.id.toLong(),
+                    goal = request.goal.toFloat()
+                )
+            ).handleResult(
+                ifError = {
+                    setState {
+                        copy(createHabitSheetState = createHabitSheetState.copy(progressBarState = ProgressBarState.Idle))
+                    }
+                    setError { UIComponent.ToastSimple(it.message.orEmpty()) }
+                },
+                ifSuccess = {
+                    setState {
+                        copy(createHabitSheetState = createHabitSheetState.copy(progressBarState = ProgressBarState.Idle))
+                    }
+                    setAction { MainAction.HideBottomSheet }
+                }
+            )
         }
     }
 }

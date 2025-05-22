@@ -25,4 +25,11 @@ class HabitRepositoryImpl(
     ): Result<String> {
         return service.postUpdateProgress(id, progress).handleResponse()
     }
+    override suspend fun createHabit(
+        habitId: Long,
+        unitId: Long,
+        goal: Float
+    ): Result<String> {
+        return service.createHabit(habitId, unitId, goal).handleResponse()
+    }
 }
