@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,20 +20,14 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,66 +44,49 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.composables.core.BottomSheet
 import com.composables.core.BottomSheetState
 import com.composables.core.SheetDetent.Companion.FullyExpanded
 import com.composables.core.SheetDetent.Companion.Hidden
 import com.composables.core.rememberBottomSheetState
-import domain.model.HabitProgressModel
-import kotlinx.coroutines.coroutineScope
+import domain.model.HabitModel
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import presentation.component.core.ButtonSize
-import presentation.component.core.DefaultButton
-import presentation.component.core.DefaultTextField
-import presentation.component.core.IconButton
-import presentation.component.core.Spacer_12dp
-import presentation.component.core.Spacer_16dp
-import presentation.component.core.Spacer_32dp
+import presentation.component.core.DefaultBottomSheet
 import presentation.navigation.BottomNavigation
-import presentation.theme.Black10
+import presentation.navigation.MainSheet
 import presentation.theme.Black20
-import presentation.theme.Black40
 import presentation.theme.DefaultCardColorsTheme
 import presentation.theme.DefaultNavigationBarItemTheme
 import presentation.theme.primaryGradient
+import presentation.ui.main.bottomsheet.CreateHabitSheet
+import presentation.ui.main.bottomsheet.CreateProgressSheetContent
 import presentation.ui.main.home.HomeScreen
-import presentation.ui.onboarding.login.LoginAction
-import presentation.ui.onboarding.login.LoginEvent
-import presentation.util.noDecimal
-import routinist.shared.generated.resources.Res
-import routinist.shared.generated.resources.next
-import routinist.shared.generated.resources.progress
-import routinist.shared.generated.resources.progress_hint
-import routinist.shared.generated.resources.update_progress
-import kotlin.math.exp
 
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = koinInject(),
+    navigateToCreateHabit: (HabitModel) -> Unit,
 ) {
     val navBottomBarController = rememberNavController()
-    val bottomSheetState = rememberBottomSheetState(
-        initialDetent = Hidden,
-    )
-    var showBottomNav by remember(bottomSheetState) { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-    var navBarHeight by remember { mutableIntStateOf(0) }
+    val bottomSheetState = rememberBottomSheetState(initialDetent = Hidden)
+    var currentBottomSheet: MainSheet? by remember { mutableStateOf(null) }
+    var showBottomNav by remember(bottomSheetState) { mutableStateOf(true) }
     val sheetExpandProgress =
         if (bottomSheetState.isIdle && bottomSheetState.currentDetent == Hidden) {
             0f
         } else {
             bottomSheetState.progress
         }
+    var navBarHeight by remember { mutableIntStateOf(0) }
     var homeRefresh by remember { mutableStateOf(false) }
 
     fun expandBottomSheet(expand: Boolean) {
@@ -123,12 +99,21 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect(mainViewModel) {
+    LaunchedEffect(Unit) {
         mainViewModel.action.onEach { effect ->
             when (effect) {
-                MainAction.HideBottomSheet -> {
+                is MainAction.HideBottomSheet -> {
                     expandBottomSheet(false)
                     homeRefresh = !homeRefresh
+                }
+
+                is MainAction.NavigateToCreateHabit -> {
+                    navigateToCreateHabit.invoke(effect.data)
+                }
+
+                is MainAction.ShowCreateHabitSheet -> {
+                    currentBottomSheet = MainSheet.CreateHabit
+                    expandBottomSheet(true)
                 }
             }
         }.collect {}
@@ -142,10 +127,17 @@ fun MainScreen(
                 exit = slideOutVertically { navBarHeight },
             ) {
                 BottomNavigationBar(
-                    modifier = Modifier.onGloballyPositioned {
-                        navBarHeight = it.size.height
-                    }.offset { IntOffset(x = 0, navBarHeight.times(sheetExpandProgress).toInt()) },
-                    navBottomBarController
+                    modifier = Modifier
+                        .onGloballyPositioned {
+                            navBarHeight = it.size.height
+                        }
+                        .offset {
+                            IntOffset(x = 0, navBarHeight.times(sheetExpandProgress).toInt())
+                        },
+                    showCreateHabitSheet = {
+                        mainViewModel.setEvent(MainEvent.ShowCreateHabitSheet)
+                    },
+                    navController = navBottomBarController
                 )
             }
         }
@@ -160,7 +152,8 @@ fun MainScreen(
                     HomeScreen(
                         refresh = homeRefresh,
                         showProgressSheet = {
-                            bottomSheetState.targetDetent = FullyExpanded
+                            currentBottomSheet = MainSheet.CreateProgress
+                            expandBottomSheet(true)
                             mainViewModel.setEvent(MainEvent.ShowProgressSheet(it))
                         }
                     )
@@ -176,120 +169,68 @@ fun MainScreen(
             }
         }
         if (sheetExpandProgress != 0f) {
+            val interactionSource = remember { MutableInteractionSource() }
             Box(
                 modifier =
                     Modifier
                         .fillMaxSize()
                         .background(Color.Black.copy(alpha = 0.5f.times(sheetExpandProgress)))
                         .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = interactionSource,
                             indication = null,
                             onClick = { expandBottomSheet(expand = false) },
                         ),
             )
         }
 
-        ProgressBottomSheet(
+        MainSheet(
             sheetState = bottomSheetState,
-            state = mainViewModel.state.value.progressSheetState,
-            onCloseClick = { bottomSheetState.targetDetent = Hidden },
             events = mainViewModel::setEvent,
-            data = mainViewModel.state.value.progressSheetState.data
+            sheet = currentBottomSheet,
+            onCloseClick = {
+                expandBottomSheet(false)
+                           },
+            state = mainViewModel.state.value
         )
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun ProgressBottomSheet(
+fun MainSheet(
     sheetState: BottomSheetState,
-    data: HabitProgressModel?,
     onCloseClick: () -> Unit = {},
-    events: (MainEvent) -> Unit = {},
-    state: MainState.ProgressSheetState
+    events: (MainEvent) -> Unit,
+    sheet: MainSheet?,
+    state: MainState
 ) {
-    if (data == null) return
-    BottomSheet(
-        state = sheetState,
-        modifier = Modifier
-            .fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(Color.White),
-    ) {
-        Column(Modifier.padding(24.dp)) {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                ),
-                title = {
-                    Text(
-                        stringResource(Res.string.update_progress),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                },
-                actions = {
-                    IconButton(
-                        imageVector = Icons.Default.Close,
-                        onClick = {
-                            onCloseClick.invoke()
-                        },
-                    )
-                },
-            )
-            Spacer_32dp()
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(
-                        gapSize = 0.dp,
-                        progress = {
-                            data.progress / data.goal
-                        },
-                        trackColor = Black10,
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 2.dp
-                    )
-                    Text(data.icon, style = MaterialTheme.typography.bodyMedium)
-                }
-                Spacer_12dp()
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = data.name,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = "${data.progress.noDecimal()}/${data.goal.noDecimal()} ${data.unit}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Black40
-                    )
-                }
+    sheet?.let {
+        DefaultBottomSheet(
+            title = stringResource(sheet.title),
+            onCloseClick = {
+                events.invoke(MainEvent.ResetSheetState(it))
+                onCloseClick.invoke()
+            },
+            sheetState = sheetState
+        ) {
+            when (it) {
+                MainSheet.CreateHabit -> CreateHabitSheet(
+                    state = state.createHabitSheetState,
+                    events = events
+                )
+                MainSheet.CreateProgress -> CreateProgressSheetContent(
+                    state = state.progressSheetState,
+                    events = events,
+                    data = state.progressSheetState.data
+                )
             }
-            Spacer_16dp()
-            DefaultTextField(
-                modifier = Modifier.fillMaxWidth(),
-                label = stringResource(Res.string.progress),
-                hint = stringResource(Res.string.progress_hint),
-                value = state.progress,
-                suffix = data.unit,
-                onValueChange = {
-                    events(MainEvent.OnProgressChange(it.toIntOrNull() ?: 0))
-                }
-            )
-            Spacer_16dp()
-            DefaultButton(
-                progressBarState = state.progressBarState,
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(Res.string.update_progress),
-                size = ButtonSize.Large,
-                onClick = {
-                    events(MainEvent.UpdateProgress)
-                }
-            )
-            Spacer_16dp()
         }
     }
 }
+
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
+    showCreateHabitSheet: () -> Unit,
     navController: NavController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -350,6 +291,9 @@ fun BottomNavigationBar(
                     .background(
                         brush = Brush.verticalGradient(colors = primaryGradient)
                     )
+                    .clickable {
+                        showCreateHabitSheet()
+                    }
             ) {
                 Icon(
                     Icons.Rounded.Add,

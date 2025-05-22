@@ -12,9 +12,11 @@ import data.remote.service.HabitService
 import data.remote.service.HabitServiceImpl
 import data.repo.AuthRepositoryImpl
 import data.repo.HabitRepositoryImpl
+import domain.model.HabitModel
 import domain.repo.AuthRepository
 import domain.repo.HabitRepository
 import domain.usecase.CheckTokenUseCase
+import domain.usecase.CreateHabitUseCase
 import domain.usecase.CreateProgressUseCase
 import domain.usecase.GetHabitSummaryUseCase
 import domain.usecase.GetRandomHabitUseCase
@@ -23,6 +25,7 @@ import domain.usecase.LoginUseCase
 import domain.usecase.RegisterUseCase
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+import presentation.ui.habit.create.CreateHabitViewModel
 import presentation.ui.main.MainViewModel
 import presentation.ui.main.home.HomeViewModel
 import presentation.ui.onboarding.OnBoardingViewModel
@@ -47,10 +50,12 @@ fun appModule() = module {
     factory { GetTodayHabitsUseCase(get()) }
     factory { CreateProgressUseCase(get())}
     factory { CheckTokenUseCase(get())}
+    factory { CreateHabitUseCase(get()) }
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
     factory { HomeViewModel(get(),get()) }
-    factory { MainViewModel(get()) }
+    factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
+    factory { CreateHabitViewModel() }
 }

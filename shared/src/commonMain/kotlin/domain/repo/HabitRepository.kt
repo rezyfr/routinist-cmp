@@ -9,4 +9,5 @@ interface HabitRepository {
     suspend fun getTodayHabits() : Result<List<UserHabitResponse>>
     suspend fun getHabitSummary() : Result<HabitSummaryResponse>
     suspend fun updateProgress(id: Long, progress: Float) : Result<String>
+    suspend fun createHabit(habitId: Long, unitId: Long, goal: Float) : Result<String>
 }

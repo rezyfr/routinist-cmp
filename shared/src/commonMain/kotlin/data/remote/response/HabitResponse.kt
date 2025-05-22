@@ -1,13 +1,12 @@
 package data.remote.response
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class HabitResponse(
     @SerialName("created_at")
-    val createdAt: String?,
+    val createdAt: String? = null,
     @SerialName("default_goal")
     val defaultGoal: Int?,
     @SerialName("id")
@@ -21,5 +20,7 @@ data class HabitResponse(
     @SerialName("units")
     val units: List<UnitResponse>,
     @SerialName("updated_at")
-    val updatedAt: String?
+    val updatedAt: String? = null,
+    @SerialName("color")
+    val color: Long?
 )

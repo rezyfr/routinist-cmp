@@ -6,13 +6,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import domain.model.HabitModel
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 import presentation.navigation.AppNavigation
-import presentation.navigation.OnBoardingNavigation
-import presentation.ui.main.home.HomeScreen
-import presentation.ui.onboarding.OnBoardingScreen
+import presentation.ui.habit.create.CreateHabitScreen
 
 @Composable
-fun MainNav() {
+fun MainNav(
+) {
     val navigator = rememberNavController()
 
     NavHost(
@@ -21,7 +24,17 @@ fun MainNav() {
         modifier = Modifier.fillMaxSize()
     ) {
         composable<AppNavigation.Main> {
-            MainScreen()
+            MainScreen {
+                val jsonHabit = Json.encodeToString<HabitModel>(it)
+                navigator.navigate(AppNavigation.CreateHabit(jsonHabit))
+            }
+        }
+        composable<AppNavigation.CreateHabit> {
+            val args = it.toRoute<AppNavigation.CreateHabit>()
+            val habit = Json.decodeFromString<HabitModel>(args.habit)
+            CreateHabitScreen(
+                habit = habit
+            )
         }
     }
 }

@@ -1,7 +1,7 @@
 package data.remote.service
 
-import com.russhwolf.settings.Settings
 import data.remote.ApiClient
+import data.remote.request.CreateHabitRequest
 import data.remote.request.CreateProgressRequest
 import data.remote.response.BaseResponse
 import data.remote.response.HabitResponse
@@ -45,6 +45,23 @@ class HabitServiceImpl(
                 endpoint = "/api/v1/protected/habit/$id/progress",
                 body = CreateProgressRequest(
                     progress = progress
+                )
+            )
+        }
+    }
+
+    override suspend fun createHabit(
+        habitId: Long,
+        unitId: Long,
+        goal: Float
+    ): NetworkResponse<BaseResponse<String>> {
+        return execute {
+            apiClient.post(
+                endpoint = "/api/v1/protected/habit/create",
+                body = CreateHabitRequest(
+                    habitId = habitId,
+                    unitId = unitId,
+                    goal = goal
                 )
             )
         }

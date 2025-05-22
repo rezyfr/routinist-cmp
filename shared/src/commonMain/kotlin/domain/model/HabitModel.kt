@@ -1,7 +1,9 @@
 package domain.model
 
 import data.remote.response.HabitResponse
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HabitModel(
     val defaultGoal: Int,
     val id: Int,
@@ -9,6 +11,7 @@ data class HabitModel(
     val measurement: String,
     val name: String,
     val units: List<UnitModel>,
+    val color: Long = 0xFFFFFFFF,
     var isSelected: Boolean = false
 ) {
     companion object {
@@ -19,6 +22,7 @@ data class HabitModel(
                 icon = response.icon.orEmpty(),
                 measurement = response.measurement.orEmpty(),
                 name = response.name.orEmpty(),
+                color = response.color ?: 0xFFFFFFFF,
                 units = response.units.map { UnitModel.fromResponse(it) }
             )
         }

@@ -40,13 +40,14 @@ kotlin {
         }
         commonMain {
             dependencies {
-
             }
         }
 
         androidMain {
             dependencies {
 
+                implementation(libs.compose.ui.tooling)
+                implementation(libs.compose.ui.tooling.preview)
 
             }
         }
