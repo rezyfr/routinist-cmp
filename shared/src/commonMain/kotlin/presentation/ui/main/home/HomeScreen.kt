@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.HabitProgressModel
 import domain.model.HabitSummaryModel
+import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import presentation.component.core.DefaultScreenUI
@@ -53,9 +54,19 @@ fun HomeScreen(
     refresh: Boolean,
     showProgressSheet: (HabitProgressModel) -> Unit,
 ) {
-    LaunchedEffect(refresh || viewModel.state.value.updatingProgressId == -1L) {
-        viewModel.getTodayHabits()
-        viewModel.getHabitSummary()
+    LaunchedEffect(refresh) {
+        viewModel.onTriggerEvent(HomeEvent.Refresh)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.action.onEach { effect ->
+            when (effect) {
+                HomeAction.Refresh -> {
+                    viewModel.getTodayHabits()
+                    viewModel.getHabitSummary()
+                }
+            }
+        }.collect {}
     }
 
     DefaultScreenUI(
@@ -69,7 +80,6 @@ fun HomeScreen(
         )
     }
 }
-
 @Composable
 fun HomeContent(
     state: HomeState,
@@ -91,7 +101,6 @@ fun HomeContent(
         )
     }
 }
-
 @Composable
 fun HomeHeaderSection(modifier: Modifier = Modifier) {
     Column(modifier.background(Color.White)) {
@@ -128,7 +137,6 @@ fun HomeHeaderSection(modifier: Modifier = Modifier) {
         Box(Modifier.fillMaxWidth(1f).height(1.dp).background(BorderColor))
     }
 }
-
 @Composable
 fun HomeMainSection(
     summary: HabitSummaryModel,
@@ -179,7 +187,6 @@ fun HomeMainSection(
         }
     }
 }
-
 @Composable
 fun HomeSummary(
     summary: HabitSummaryModel

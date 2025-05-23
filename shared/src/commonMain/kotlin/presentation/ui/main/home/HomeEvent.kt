@@ -4,5 +4,6 @@ import domain.model.HabitProgressModel
 import presentation.component.core.ViewEvent
 
 sealed class HomeEvent : ViewEvent {
+    data object Refresh : HomeEvent()
     data class OnProgressFinished(val progress: HabitProgressModel) : HomeEvent()
 }

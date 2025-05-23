@@ -109,6 +109,7 @@ fun OnBoardingScreen(
         ),
     )
     DefaultScreenUI(
+        progressBarState = viewModel.state.value.progressBarState,
         gradientBackground = true
     ) {
         Image(

@@ -33,6 +33,7 @@ class HomeViewModel(
     override fun onTriggerEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnProgressFinished -> finishProgress(event.progress)
+            is HomeEvent.Refresh -> setAction { HomeAction.Refresh }
         }
     }
 
@@ -47,7 +48,7 @@ class HomeViewModel(
                 },
                 ifSuccess = {
                     setState { copy(updatingProgressId = -1) }
-                    setAction { HomeAction.CollapseProgress(data.id) }
+                    setAction { HomeAction.Refresh }
                 }
             )
         }

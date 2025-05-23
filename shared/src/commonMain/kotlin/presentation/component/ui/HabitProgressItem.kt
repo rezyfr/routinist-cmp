@@ -37,16 +37,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.composeunstyled.ProgressIndicator
 import domain.model.HabitProgressModel
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonNull.content
+import org.jetbrains.compose.resources.stringResource
 import presentation.component.core.IconButton
 import presentation.component.core.Spacer_12dp
 import presentation.theme.Black10
 import presentation.theme.Black40
 import presentation.theme.Green100
 import presentation.util.noDecimal
+import routinist.shared.generated.resources.Res
+import routinist.shared.generated.resources.finish
 import kotlin.math.roundToInt
 
 const val ANIMATION_DURATION = 200
@@ -78,6 +79,12 @@ fun HabitProgressItem(
         )
     }
 
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            swipeState.animateTo(DragValue.Center)
+        }
+    }
+
     SwipeToRevealItem(
         swipeState = swipeState,
         backgroundContent = {
@@ -104,9 +111,6 @@ fun HabitProgressItem(
                             contentDescription = null,
                             modifier = Modifier
                                 .clickable {
-                                    coroutineScope.launch {
-                                        swipeState.animateTo(DragValue.Center)
-                                    }
                                     onClickFinish(data)
                                 }
                                 .size(20.dp),
@@ -115,7 +119,7 @@ fun HabitProgressItem(
                     }
 
                     Text(
-                        text = "Finish",
+                        text = stringResource(Res.string.finish),
                         style = MaterialTheme.typography.labelMedium,
                         color = Black40
                     )
