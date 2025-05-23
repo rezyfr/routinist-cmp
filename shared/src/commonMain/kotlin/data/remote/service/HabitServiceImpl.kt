@@ -4,6 +4,7 @@ import data.remote.ApiClient
 import data.remote.request.CreateHabitRequest
 import data.remote.request.CreateProgressRequest
 import data.remote.response.BaseResponse
+import data.remote.response.CreateProgressResponse
 import data.remote.response.HabitResponse
 import data.remote.response.HabitSummaryResponse
 import data.remote.response.NetworkResponse
@@ -39,7 +40,7 @@ class HabitServiceImpl(
     override suspend fun postUpdateProgress(
         id: Long,
         progress: Float
-    ): NetworkResponse<BaseResponse<String>> {
+    ): NetworkResponse<BaseResponse<CreateProgressResponse>> {
         return execute {
             apiClient.post(
                 endpoint = "/api/v1/protected/habit/$id/progress",

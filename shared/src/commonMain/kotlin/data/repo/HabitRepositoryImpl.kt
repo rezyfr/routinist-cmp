@@ -1,5 +1,6 @@
 package data.repo
 
+import data.remote.response.CreateProgressResponse
 import data.remote.response.HabitResponse
 import data.remote.response.HabitSummaryResponse
 import data.remote.response.UserHabitResponse
@@ -22,7 +23,7 @@ class HabitRepositoryImpl(
     override suspend fun updateProgress(
         id: Long,
         progress: Float
-    ): Result<String> {
+    ): Result<CreateProgressResponse> {
         return service.postUpdateProgress(id, progress).handleResponse()
     }
     override suspend fun createHabit(
