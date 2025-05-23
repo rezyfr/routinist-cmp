@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import domain.model.HabitProgressModel
 import domain.model.HabitSummaryModel
+import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import presentation.component.core.DefaultScreenUI
@@ -54,8 +55,18 @@ fun HomeScreen(
     showProgressSheet: (HabitProgressModel) -> Unit,
 ) {
     LaunchedEffect(refresh) {
-        viewModel.getTodayHabits()
-        viewModel.getHabitSummary()
+        viewModel.onTriggerEvent(HomeEvent.Refresh)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.action.onEach { effect ->
+            when (effect) {
+                HomeAction.Refresh -> {
+                    viewModel.getTodayHabits()
+                    viewModel.getHabitSummary()
+                }
+            }
+        }.collect {}
     }
 
     DefaultScreenUI(
@@ -69,7 +80,6 @@ fun HomeScreen(
         )
     }
 }
-
 @Composable
 fun HomeContent(
     state: HomeState,
@@ -83,6 +93,7 @@ fun HomeContent(
             summary = state.summary,
             today = state.today,
             calendars = state.calendars,
+            updatingProgressId = state.updatingProgressId,
             events = events,
             showProgressSheet = {
                 showProgressSheet.invoke(it)
@@ -90,7 +101,6 @@ fun HomeContent(
         )
     }
 }
-
 @Composable
 fun HomeHeaderSection(modifier: Modifier = Modifier) {
     Column(modifier.background(Color.White)) {
@@ -127,14 +137,14 @@ fun HomeHeaderSection(modifier: Modifier = Modifier) {
         Box(Modifier.fillMaxWidth(1f).height(1.dp).background(BorderColor))
     }
 }
-
 @Composable
 fun HomeMainSection(
     summary: HabitSummaryModel,
     today: List<HabitProgressModel>,
     calendars: List<Pair<String, String>> = emptyList(),
     showProgressSheet: (HabitProgressModel) -> Unit,
-    events: (HomeEvent) -> Unit
+    events: (HomeEvent) -> Unit,
+    updatingProgressId: Long
 ) {
     LazyRow(
         Modifier.fillMaxWidth(),
@@ -157,18 +167,26 @@ fun HomeMainSection(
         text = stringResource(Res.string.habits)
     )
     Spacer_4dp()
+    println("Recompose main section")
     LazyColumn(
         Modifier.fillMaxWidth().padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(today) {
-            HabitProgressItem(data = it) {
-                showProgressSheet.invoke(it)
-            }
+        items(today, key = { it.id }) {
+            println("Recompose main items ${it.id}")
+            HabitProgressItem(
+                data = it,
+                onClickFinish = {
+                    events.invoke(HomeEvent.OnProgressFinished(it))
+                },
+                onClickAdd = {
+                    showProgressSheet.invoke(it)
+                },
+                isLoading = updatingProgressId == it.id
+            )
         }
     }
 }
-
 @Composable
 fun HomeSummary(
     summary: HabitSummaryModel
