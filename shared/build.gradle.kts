@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.routinist.kotlinMultiplatform)
     alias(libs.plugins.routinist.shared)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.sqldelightApp)
 }
 
 ktlint {
@@ -64,10 +65,18 @@ kotlin {
 
         jsMain {
             dependencies{
-
+                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
         }
 
+    }
+
+    sqldelight {
+        databases {
+            create("RoutinistDatabase") {
+                packageName = "id.rezyfr.routinist"
+            }
+        }
     }
 }
 

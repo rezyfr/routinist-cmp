@@ -1,0 +1,91 @@
+package id.rezyfr.routinist.presentation.ui.onboarding.register
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.onEach
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
+import id.rezyfr.routinist.presentation.component.core.ButtonSize
+import id.rezyfr.routinist.presentation.component.core.DefaultButton
+import id.rezyfr.routinist.presentation.component.core.DefaultScreenUI
+import routinist.shared.generated.resources.Res
+import routinist.shared.generated.resources.next
+import routinist.shared.generated.resources.register_title
+
+@Composable
+fun RegisterScreen(
+    viewModel: RegisterViewModel = koinInject(),
+    navigateToMain: () -> Unit = {},
+    onBackClick: () -> Unit = {}
+) {
+    LaunchedEffect(viewModel) {
+        viewModel.action.onEach { effect ->
+            when (effect) {
+                RegisterAction.NavigateToMain -> {
+                    navigateToMain()
+                }
+            }
+        }.collect {}
+    }
+
+    DefaultScreenUI(
+        errors = viewModel.errors,
+        titleToolbar = stringResource(Res.string.register_title),
+        startIconToolbar = Icons.Default.ChevronLeft,
+        onClickStartIconToolbar = {
+            if (viewModel.state.value.step > 1)
+                viewModel.setEvent(RegisterEvent.Previous)
+            else
+                onBackClick()
+        }
+    ) {
+        RegisterContent(
+            state = viewModel.state.value,
+            events = viewModel::setEvent
+        )
+    }
+}
+@Composable
+fun RegisterContent(
+    state: RegisterState,
+    events: (RegisterEvent) -> Unit = {},
+) {
+    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
+        when (state.step) {
+            1 -> RegisterInfoScreen(
+                modifier = Modifier.weight(1f),
+                state = state,
+                events = events
+            )
+
+            2 -> RegisterGenderScreen(
+                modifier = Modifier.weight(1f),
+                state = state,
+                events = events
+            )
+
+            3 -> RegisterHabitScreen(
+                modifier = Modifier.weight(1f),
+                state = state,
+                events = events
+            )
+        }
+
+        DefaultButton(
+            enabled = state.enableButton,
+            progressBarState = state.progressBarState,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            text = stringResource(Res.string.next),
+            size = ButtonSize.Large,
+            onClick = { events.invoke(RegisterEvent.Next) }
+        )
+    }
+}

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import presentation.App
+import id.rezyfr.routinist.presentation.App
 
 @Composable
 fun MainView() {

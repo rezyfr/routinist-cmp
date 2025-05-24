@@ -56,5 +56,9 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+
+    dependencies {
+        implementation(libs.koin.androidx)
+    }
 }
 

@@ -1,0 +1,5 @@
+insertHabit:
+INSERT OR REPLACE INTO HabitEntity (id, icon, name, measurement, color, units, goal) VALUES (:id, :icon, :name, :measurement, :color, :units, :goal);
+
+getHabits:
+SELECT * FROM HabitEntity;

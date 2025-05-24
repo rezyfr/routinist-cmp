@@ -73,7 +73,8 @@ class SharedConventionPlugin : Plugin<Project> {
                         api(libs.findLibrary("koin.compose").get())
                         api(libs.findLibrary("coil3").get())
                         api(libs.findLibrary("coil3.network").get())
-
+                        implementation(libs.findLibrary("sqldelight.coroutines").get())
+                        implementation(libs.findLibrary("sqldelight.runtime").get())
                     }
                 }
 
@@ -94,6 +95,7 @@ class SharedConventionPlugin : Plugin<Project> {
                         api(libs.findLibrary("coil3.svg").get())
                         api(libs.findLibrary("coil3.core").get())
                         api(libs.findLibrary("coil3.video").get())
+                        implementation(libs.findLibrary("sqldelight.android").get())
                     }
                 }
 
@@ -101,6 +103,7 @@ class SharedConventionPlugin : Plugin<Project> {
                     dependencies {
                         implementation(libs.findLibrary("ktor.darwin.ios").get())
                         implementation(libs.findLibrary("ktor.ios").get())
+                        implementation(libs.findLibrary("sqldelight.native").get())
                     }
                 }
 
@@ -110,12 +113,14 @@ class SharedConventionPlugin : Plugin<Project> {
                         implementation(composeDeps.desktop.currentOs)
                         implementation(libs.findLibrary("ktor.okhttp").get())
                         implementation(libs.findLibrary("kotlinx.coroutines.swing").get())
+                        implementation(libs.findLibrary("sqldelight.driver").get())
                     }
                 }
                 jsMain {
                     dependencies {
                         implementation(composeDeps.html.core)
                         implementation(libs.findLibrary("ktor.client.js").get())
+                        implementation(libs.findLibrary("sqldelight.web").get())
                     }
                 }
             }

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS HabitEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    icon TEXT NOT NULL,
+    name TEXT NOT NULL,
+    measurement TEXT NOT NULL,
+    color INTEGER NOT NULL,
+    units TEXT NOT NULL,
+    goal INTEGER NOT NULL
+);

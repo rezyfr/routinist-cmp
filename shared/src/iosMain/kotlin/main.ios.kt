@@ -1,7 +1,7 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import common.Context
+import id.rezyfr.routinist.common.Context
 import platform.UIKit.UIViewController
-import presentation.App
+import id.rezyfr.routinist.presentation.App
 
 
 fun mainViewController(
