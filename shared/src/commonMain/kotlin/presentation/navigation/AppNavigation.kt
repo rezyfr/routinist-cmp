@@ -16,4 +16,9 @@ sealed interface AppNavigation {
     data class CreateHabit(
         val habit: String
     ) : AppNavigation
+
+    @Serializable
+    data class Milestone(
+        val milestone: Int
+    ) : AppNavigation
 }

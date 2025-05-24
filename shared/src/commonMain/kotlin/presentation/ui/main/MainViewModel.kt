@@ -123,6 +123,10 @@ class MainViewModel(
                 ifSuccess = {
                     setAction { MainAction.HideBottomSheet }
                     setState { copy(progressSheetState = progressSheetState.copy(progressBarState = ProgressBarState.Idle)) }
+
+                    if (it != null) {
+                        setAction { MainAction.ShowMilestone(it.toInt()) }
+                    }
                 }
             )
         }

@@ -12,10 +12,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import presentation.navigation.AppNavigation
 import presentation.ui.habit.create.CreateHabitScreen
+import presentation.ui.main.home.MilestoneScreen
 
 @Composable
-fun MainNav(
-) {
+fun MainNav() {
     val navigator = rememberNavController()
 
     NavHost(
@@ -24,16 +24,28 @@ fun MainNav(
         modifier = Modifier.fillMaxSize()
     ) {
         composable<AppNavigation.Main> {
-            MainScreen {
-                val jsonHabit = Json.encodeToString<HabitModel>(it)
-                navigator.navigate(AppNavigation.CreateHabit(jsonHabit))
-            }
+            MainScreen(
+                navigateToCreateHabit = {
+                    val jsonHabit = Json.encodeToString<HabitModel>(it)
+                    navigator.navigate(AppNavigation.CreateHabit(jsonHabit))
+                },
+                navigateToMilestone = {
+                    navigator.navigate(AppNavigation.Milestone(it))
+                }
+            )
         }
         composable<AppNavigation.CreateHabit> {
             val args = it.toRoute<AppNavigation.CreateHabit>()
             val habit = Json.decodeFromString<HabitModel>(args.habit)
             CreateHabitScreen(
                 habit = habit
+            )
+        }
+        composable<AppNavigation.Milestone> {
+            val args = it.toRoute<AppNavigation.Milestone>()
+            MilestoneScreen(
+                onBackClick = { navigator.navigateUp() },
+                milestone = args.milestone
             )
         }
     }

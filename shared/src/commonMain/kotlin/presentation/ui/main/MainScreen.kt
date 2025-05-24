@@ -6,16 +6,18 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +27,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -58,28 +59,30 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import presentation.component.core.DefaultBottomSheet
 import presentation.navigation.BottomNavigation
 import presentation.navigation.MainSheet
+import presentation.theme.AppTheme
 import presentation.theme.Black20
 import presentation.theme.DefaultCardColorsTheme
 import presentation.theme.DefaultNavigationBarItemTheme
 import presentation.theme.primaryGradient
 import presentation.ui.main.bottomsheet.CreateHabitSheet
 import presentation.ui.main.bottomsheet.CreateProgressSheetContent
-import presentation.ui.main.home.HomeScreen
+import presentation.ui.main.home.HomeNav
 
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = koinInject(),
     navigateToCreateHabit: (HabitModel) -> Unit,
+    navigateToMilestone: (Int) -> Unit,
 ) {
     val navBottomBarController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState = rememberBottomSheetState(initialDetent = Hidden)
     var currentBottomSheet: MainSheet? by remember { mutableStateOf(null) }
-    var showBottomNav by remember(bottomSheetState) { mutableStateOf(true) }
     val sheetExpandProgress =
         if (bottomSheetState.isIdle && bottomSheetState.currentDetent == Hidden) {
             0f
@@ -88,6 +91,7 @@ fun MainScreen(
         }
     var navBarHeight by remember { mutableIntStateOf(0) }
     var homeRefresh by remember { mutableStateOf(false) }
+    var showBottomNav by remember { mutableStateOf(true) }
 
     fun expandBottomSheet(expand: Boolean) {
         coroutineScope.launch {
@@ -105,6 +109,7 @@ fun MainScreen(
                 is MainAction.HideBottomSheet -> {
                     expandBottomSheet(false)
                     homeRefresh = !homeRefresh
+                    print("homeRefresh: $homeRefresh")
                 }
 
                 is MainAction.NavigateToCreateHabit -> {
@@ -114,6 +119,12 @@ fun MainScreen(
                 is MainAction.ShowCreateHabitSheet -> {
                     currentBottomSheet = MainSheet.CreateHabit
                     expandBottomSheet(true)
+                }
+
+                is MainAction.ShowMilestone -> {
+                    navigateToMilestone.invoke(effect.milestone)
+                    showBottomNav = false
+                    print("showBottomNav: $showBottomNav")
                 }
             }
         }.collect {}
@@ -134,40 +145,45 @@ fun MainScreen(
                         .offset {
                             IntOffset(x = 0, navBarHeight.times(sheetExpandProgress).toInt())
                         },
-                    showCreateHabitSheet = {
-                        mainViewModel.setEvent(MainEvent.ShowCreateHabitSheet)
-                    },
-                    navController = navBottomBarController
+                    onAddClicked = { mainViewModel.setEvent(MainEvent.ShowCreateHabitSheet) },
+                    navController = navBottomBarController,
                 )
             }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(
-                startDestination = BottomNavigation.Home.route,
+                startDestination = BottomNavigation.HOME.route,
                 navController = navBottomBarController,
                 modifier = Modifier.fillMaxSize()
             ) {
-                composable(route = BottomNavigation.Home.route) {
-                    HomeScreen(
+                composable(route = BottomNavigation.HOME.route) {
+                    HomeNav(
                         refresh = homeRefresh,
                         showProgressSheet = {
                             currentBottomSheet = MainSheet.CreateProgress
                             expandBottomSheet(true)
                             mainViewModel.setEvent(MainEvent.ShowProgressSheet(it))
-                        }
+                        },
+                        onNavigating = { showBottomNav = false },
+                        onBack = { showBottomNav = true }
                     )
                 }
-                composable(route = BottomNavigation.Explore.route) {
+                composable(route = BottomNavigation.EXPLORE.route) {
+                    showBottomNav = true
                 }
-                composable(route = BottomNavigation.Add.route) {
+                composable(route = BottomNavigation.ADD.route) {
+                    showBottomNav = true
                 }
-                composable(route = BottomNavigation.Challenge.route) {
+                composable(route = BottomNavigation.CHALLENGE.route) {
+                    showBottomNav = true
                 }
-                composable(route = BottomNavigation.Profile.route) {
+                composable(route = BottomNavigation.PROFILE.route) {
+                    showBottomNav = true
                 }
             }
         }
+
         if (sheetExpandProgress != 0f) {
             val interactionSource = remember { MutableInteractionSource() }
             Box(
@@ -189,12 +205,11 @@ fun MainScreen(
             sheet = currentBottomSheet,
             onCloseClick = {
                 expandBottomSheet(false)
-                           },
+            },
             state = mainViewModel.state.value
         )
     }
 }
-
 @Composable
 fun MainSheet(
     sheetState: BottomSheetState,
@@ -217,6 +232,7 @@ fun MainSheet(
                     state = state.createHabitSheetState,
                     events = events
                 )
+
                 MainSheet.CreateProgress -> CreateProgressSheetContent(
                     state = state.progressSheetState,
                     events = events,
@@ -226,82 +242,79 @@ fun MainSheet(
         }
     }
 }
-
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
-    showCreateHabitSheet: () -> Unit,
+    onAddClicked: () -> Unit,
     navController: NavController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    Card(
-        colors = DefaultCardColorsTheme(),
-        modifier = modifier.fillMaxWidth().padding(20.dp),
-        elevation = CardDefaults.cardElevation(0.dp),
-        shape = RoundedCornerShape(64.dp),
-        border = BorderStroke(0.5.dp, Black20)
+    Box(
+        modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
     ) {
-        Box(Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .windowInsetsPadding(NavigationBarDefaults.windowInsets)
-                    .selectableGroup()
-            ) {
-                val items = listOf(
-                    BottomNavigation.Home,
-                    BottomNavigation.Explore,
-                    BottomNavigation.Add,
-                    BottomNavigation.Challenge,
-                    BottomNavigation.Profile,
-                )
-                items.forEach {
-                    NavigationBarItem(
-                        colors = DefaultNavigationBarItemTheme(),
-                        selected = it.route == currentRoute,
-                        icon = {
-                            Image(
-                                painterResource(if (it.route == currentRoute) it.selectedIcon else it.unselectedIcon),
-                                it.route,
-                                modifier = Modifier.size(32.dp)
-                            )
-                        },
-                        onClick = {
-                            if (currentRoute != it.route) {
-                                navController.navigate(it.route) {
-                                    navController.graph.startDestinationRoute?.let { route ->
-                                        popUpTo(route) {
-                                            saveState = true
-                                        }
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(64.dp))
+                .border(BorderStroke(0.5.dp, Black20), RoundedCornerShape(64.dp))
+                .selectableGroup()
+        ) {
+            BottomNavigation.entries.forEach {
+                NavigationBarItem(
+                    colors = DefaultNavigationBarItemTheme(),
+                    selected = it.route == currentRoute,
+                    icon = {
+                        Image(
+                            painterResource(if (it.route == currentRoute) it.selectedIcon else it.unselectedIcon),
+                            it.route,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    },
+                    onClick = {
+                        if (currentRoute != it.route) {
+                            navController.navigate(it.route) {
+                                navController.graph.startDestinationRoute?.let { route ->
+                                    popUpTo(route) {
+                                        saveState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        })
-                }
-            }
-
-            Box(
-                Modifier
-                    .align(Alignment.Center)
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(
-                        brush = Brush.verticalGradient(colors = primaryGradient)
-                    )
-                    .clickable {
-                        showCreateHabitSheet()
-                    }
-            ) {
-                Icon(
-                    Icons.Rounded.Add,
-                    modifier = Modifier.size(36.dp).align(Alignment.Center),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.background
-                )
+                        }
+                    })
             }
         }
+
+        Box(
+            Modifier
+                .align(Alignment.Center)
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(
+                    brush = Brush.verticalGradient(colors = primaryGradient)
+                )
+                .clickable {
+                    onAddClicked()
+                }
+        ) {
+            Icon(
+                Icons.Rounded.Add,
+                modifier = Modifier.size(36.dp).align(Alignment.Center),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.background
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun BottomBarPreview() {
+    AppTheme {
+        BottomNavigationBar(onAddClicked = {}, navController = rememberNavController())
     }
 }

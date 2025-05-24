@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,6 +53,7 @@ import routinist.shared.generated.resources.home_slogan
 fun HomeScreen(
     viewModel: HomeViewModel = koinInject(),
     refresh: Boolean,
+    navigateToMilestone: (Int) -> Unit,
     showProgressSheet: (HabitProgressModel) -> Unit,
 ) {
     LaunchedEffect(refresh) {
@@ -61,9 +63,13 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.action.onEach { effect ->
             when (effect) {
-                HomeAction.Refresh -> {
+                is HomeAction.Refresh -> {
                     viewModel.getTodayHabits()
                     viewModel.getHabitSummary()
+                }
+
+                is HomeAction.NavigateToMilestone -> {
+                    navigateToMilestone.invoke(effect.milestone)
                 }
             }
         }.collect {}
@@ -167,13 +173,12 @@ fun HomeMainSection(
         text = stringResource(Res.string.habits)
     )
     Spacer_4dp()
-    println("Recompose main section")
     LazyColumn(
-        Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+        Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal =  24.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         items(today, key = { it.id }) {
-            println("Recompose main items ${it.id}")
             HabitProgressItem(
                 data = it,
                 onClickFinish = {

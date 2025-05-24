@@ -48,6 +48,7 @@ fun DefaultScreenUI(
     onClickStartIconToolbar: () -> Unit = {},
     onClickEndIconToolbar: () -> Unit = {},
     gradientBackground: Boolean = false,
+    toolbarColor: Color = Color.White,
     content: @Composable () -> Unit,
 ) {
 
@@ -62,7 +63,7 @@ fun DefaultScreenUI(
                 Column {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.White
+                            containerColor = toolbarColor
                         ),
                         title = {
                             Text(titleToolbar, style = MaterialTheme.typography.headlineMedium)

@@ -118,6 +118,7 @@ fun DefaultButton(
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     shape: Shape = MaterialTheme.shapes.extraLarge,
     size: ButtonSize = ButtonSize.Medium,
+    colors: ButtonColors = DefaultButtonTheme(),
     text: String,
     onClick: () -> Unit,
 ) {
@@ -127,7 +128,7 @@ fun DefaultButton(
         elevation = if (enableElevation) ButtonDefaults.buttonElevation() else ButtonDefaults.buttonElevation(
             0.dp
         ),
-        colors = DefaultButtonTheme(),
+        colors = colors,
         shape = shape,
         onClick = onClick,
         progressBarState = progressBarState,
