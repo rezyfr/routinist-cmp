@@ -170,7 +170,7 @@ fun MainScreen(
                 composable(route = BottomNavigation.ADD.route) {
                     showBottomNav = true
                 }
-                composable(route = BottomNavigation.CHALLENGE.route) {
+                composable(route = BottomNavigation.ACTIVITY.route) {
                     showBottomNav = true
                 }
                 composable(route = BottomNavigation.PROFILE.route) {

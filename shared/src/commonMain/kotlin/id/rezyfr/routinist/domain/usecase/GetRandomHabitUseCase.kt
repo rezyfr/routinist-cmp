@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.map
 class GetRandomHabitUseCase(
     private val repository: HabitRepository
 ) : UseCase<UiResult<List<HabitModel>>, Unit> {
-
     override fun executeFlow(params: Unit?): Flow<UiResult<List<HabitModel>>> {
         return callbackFlow<UiResult<List<HabitModel>>> {
             repository.getRandomHabits().first().let { result ->
@@ -29,9 +28,7 @@ class GetRandomHabitUseCase(
             val apiResult = repository.fetchRandomHabits()
 
             apiResult.onSuccess {
-                val response = it.map { HabitModel.fromResponse(it) }
                 repository.savePopularHabits(it.map { HabitModel.fromResponse(it) })
-                trySend(UiResult.Success(response))
             }
 
             awaitClose()

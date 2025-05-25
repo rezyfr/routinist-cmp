@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import id.rezyfr.routinist.presentation.theme.BorderColor
 import id.rezyfr.routinist.presentation.theme.DefaultButtonTheme
@@ -42,12 +44,14 @@ val DEFAULT__BUTTON_SIZE_EXTRA = 60.dp
 @Composable
 fun IconButton(
     modifier: Modifier = Modifier,
+    size: Dp = 48.dp,
+    shape: CornerBasedShape = MaterialTheme.shapes.medium,
     imageVector: ImageVector,
     onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier.size(48.dp),
-        shape = MaterialTheme.shapes.medium,
+        modifier = modifier.size(size),
+        shape = shape,
         colors = DefaultCardColorsTheme(),
         elevation = CardDefaults.cardElevation(0.dp),
         border = BorderStroke(1.dp, BorderColor),

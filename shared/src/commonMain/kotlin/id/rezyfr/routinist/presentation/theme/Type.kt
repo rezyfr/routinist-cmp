@@ -13,7 +13,7 @@ import routinist.shared.generated.resources.Res
 
 
 @Composable
-fun LatoTypography(): Typography {
+fun CerealTypography(): Typography {
     val cereal = FontFamily(
         Font(
             resource = Res.font.cereal_bold,

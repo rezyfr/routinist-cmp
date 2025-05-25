@@ -18,6 +18,8 @@ val Black10 = Color(0xFFEAECF0)
 val Green100 = Color(0xFF3BA935)
 val Blue10 = Color(0xFFDDF2FC)
 val Orange60 = Color(0xFFFFC148)
+val Red100 = Color(0xFFE3524F)
+val DarkBlue10 = Color(0xFFF3F4F6)
 
 val Grey = Color(0xFF404649)
 

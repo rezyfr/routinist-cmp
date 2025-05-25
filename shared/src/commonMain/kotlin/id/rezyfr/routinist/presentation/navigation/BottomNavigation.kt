@@ -31,10 +31,10 @@ enum class BottomNavigation(
         unselectedIcon = Res.drawable.ic_home_active,
         route = "Add"
     ),
-    CHALLENGE(
+    ACTIVITY(
         selectedIcon = Res.drawable.ic_medal_active,
         unselectedIcon = Res.drawable.ic_medal_inactive,
-        route = "Challenge"
+        route = "Activity"
     ),
     PROFILE(
         selectedIcon = Res.drawable.ic_profile_active,

@@ -37,6 +37,13 @@
     <string name="create_habit_title">Create Habit</string>
     <string name="new_good_habit">New Good Habit</string>
 
+    <!-- Activity -->
+    <string name="activity">Activity</string>
+    <string name="activity_success_rate">Success Rate</string>
+    <string name="activity_completed">Completed</string>
+    <string name="activity_failed">Failed</string>
+    <string name="activity_points_earned">Points earned</string>
+
     <!-- Common -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
@@ -55,4 +62,6 @@
     <string name="create_custom_habit">Create Custom Habit</string>
     <string name="finish">Finish</string>
     <string name="okay">Okay</string>
+    <string name="date">Date</string>
+    <string name="summary">Summary</string>
 </resources>
