@@ -1,5 +1,6 @@
 package id.rezyfr.routinist.data.remote.service
 
+import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.BaseResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
@@ -13,4 +14,5 @@ interface HabitService {
     suspend fun getHabitSummary() : NetworkResponse<BaseResponse<HabitSummaryResponse>>
     suspend fun postUpdateProgress(id: Long, progress: Float) : NetworkResponse<BaseResponse<CreateProgressResponse>>
     suspend fun createHabit(habitId: Long, unitId: Long, goal: Float) : NetworkResponse<BaseResponse<String>>
+    suspend fun getActivitySummary(userHabitId: Long, startDate: String, endDate: String) : NetworkResponse<BaseResponse<ActivitySummaryResponse>>
 }

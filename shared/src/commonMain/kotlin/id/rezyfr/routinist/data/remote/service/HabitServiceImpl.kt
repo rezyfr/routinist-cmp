@@ -3,6 +3,8 @@ package id.rezyfr.routinist.data.remote.service
 import id.rezyfr.routinist.data.remote.ApiClient
 import id.rezyfr.routinist.data.remote.request.CreateHabitRequest
 import id.rezyfr.routinist.data.remote.request.CreateProgressRequest
+import id.rezyfr.routinist.data.remote.request.GetActivitySummaryRequest
+import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.BaseResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
@@ -33,7 +35,7 @@ class HabitServiceImpl(
 
     override suspend fun getHabitSummary(): NetworkResponse<BaseResponse<HabitSummaryResponse>> {
         return execute {
-            apiClient.get("/api/v1/protected/habit/summary")
+            apiClient.get("/api/v1/protected/habit/progress-summary")
         }
     }
 
@@ -63,6 +65,22 @@ class HabitServiceImpl(
                     habitId = habitId,
                     unitId = unitId,
                     goal = goal
+                )
+            )
+        }
+    }
+    override suspend fun getActivitySummary(
+        userHabitId: Long,
+        startDate: String,
+        endDate: String
+    ): NetworkResponse<BaseResponse<ActivitySummaryResponse>> {
+        return execute {
+            apiClient.post(
+                endpoint = "/api/v1/protected/habit/activity-summary",
+                body = GetActivitySummaryRequest(
+                    userHabitId = userHabitId,
+                    from = startDate,
+                    to = endDate
                 )
             )
         }

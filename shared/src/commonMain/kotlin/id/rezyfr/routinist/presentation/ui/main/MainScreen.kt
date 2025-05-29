@@ -64,6 +64,7 @@ import id.rezyfr.routinist.presentation.theme.AppTheme
 import id.rezyfr.routinist.presentation.theme.Black20
 import id.rezyfr.routinist.presentation.theme.DefaultNavigationBarItemTheme
 import id.rezyfr.routinist.presentation.theme.primaryGradient
+import id.rezyfr.routinist.presentation.ui.main.activity.ActivityScreen
 import id.rezyfr.routinist.presentation.ui.main.bottomsheet.CreateHabitSheet
 import id.rezyfr.routinist.presentation.ui.main.bottomsheet.CreateProgressSheetContent
 import id.rezyfr.routinist.presentation.ui.main.home.HomeNav
@@ -171,6 +172,7 @@ fun MainScreen(
                     showBottomNav = true
                 }
                 composable(route = BottomNavigation.ACTIVITY.route) {
+                    ActivityScreen()
                     showBottomNav = true
                 }
                 composable(route = BottomNavigation.PROFILE.route) {

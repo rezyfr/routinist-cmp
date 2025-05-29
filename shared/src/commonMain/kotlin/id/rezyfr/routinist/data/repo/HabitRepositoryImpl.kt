@@ -5,6 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.russhwolf.settings.Settings
 import id.rezyfr.routinist.RoutinistDatabase
 import id.rezyfr.routinist.constants.SettingsConstant
+import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
 import id.rezyfr.routinist.data.remote.response.HabitSummaryResponse
@@ -72,5 +73,12 @@ class HabitRepositoryImpl(
         goal: Float
     ): Result<String> {
         return service.createHabit(habitId, unitId, goal).handleResponse()
+    }
+    override suspend fun getActivitySummary(
+        userHabitId: Long,
+        startDate: String,
+        endDate: String
+    ): Result<ActivitySummaryResponse> {
+        return service.getActivitySummary(userHabitId, startDate, endDate).handleResponse()
     }
 }

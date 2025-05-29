@@ -7,7 +7,7 @@ import id.rezyfr.routinist.presentation.ui.onboarding.register.Gender
 
 class RegisterUseCase(
     private val authRepository: AuthRepository
-) : UseCase<UiResult<Unit>, RegisterUseCase.Params> {
+) : UseCase<Unit, RegisterUseCase.Params> {
     override suspend fun execute(params: Params): UiResult<Unit> {
         return handleResult(
             execute = {

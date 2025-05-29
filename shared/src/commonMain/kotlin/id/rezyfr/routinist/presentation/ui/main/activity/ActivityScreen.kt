@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.model.ActivitySummaryModel
 import id.rezyfr.routinist.presentation.component.core.DefaultScreenUI
 import id.rezyfr.routinist.presentation.component.core.IconButton
@@ -39,6 +40,7 @@ import id.rezyfr.routinist.presentation.theme.Green100
 import id.rezyfr.routinist.presentation.theme.Red100
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 import routinist.shared.generated.resources.Res
 import routinist.shared.generated.resources.activity_success_rate
 import routinist.shared.generated.resources.activity_completed
@@ -49,7 +51,9 @@ import routinist.shared.generated.resources.date
 import routinist.shared.generated.resources.summary
 
 @Composable
-fun ActivityScreen() {
+fun ActivityScreen(
+    viewModel: ActivityViewModel = koinInject(),
+) {
     DefaultScreenUI(
         titleToolbar = stringResource(Res.string.activity),
         toolbarContent = {
@@ -58,11 +62,23 @@ fun ActivityScreen() {
             )
         },
     ) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 12.dp)) {
-            ActivitySummaryCard(
-                Modifier.fillMaxWidth()
-            )
-        }
+        ActivityContent(
+            state = viewModel.state.value,
+            events = viewModel::setEvent
+        )
+    }
+}
+
+@Composable
+fun ActivityContent(
+    state: ActivityState,
+    events: (ActivityEvent) -> Unit = {}
+) {
+    Column(Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 12.dp)) {
+        ActivitySummaryCard(
+            Modifier.fillMaxWidth(),
+            state = state.summary
+        )
     }
 }
 
@@ -87,76 +103,80 @@ fun DateRangeSelector(
 @Composable
 fun ActivitySummaryCard(
     modifier: Modifier = Modifier,
-    data: ActivitySummaryModel = ActivitySummaryModel(
-        successRate = 98f,
-        completed = 244,
-        failed = 2,
-        pointsEarned = 312,
-        name = "All Summary",
-        icon = "\uD83D\uDC40"
-    )
+    state: UiResult<ActivitySummaryModel>
 ) {
     Card(
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.dp, BorderColor),
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
-        Column(Modifier.fillMaxWidth().padding(16.dp)) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(36.dp).background(DarkBlue10, RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(data.icon, style = MaterialTheme.typography.titleMedium)
-                }
-                Spacer_12dp()
-                Column(Modifier.weight(1f)) {
-                    Text(data.name, style = MaterialTheme.typography.bodyLarge)
-                    Text(
-                        stringResource(Res.string.summary),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Black40
-                    )
-                }
-                Spacer_12dp()
-                IconButton(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    shape = MaterialTheme.shapes.small,
-                    size = 36.dp
-                ) {
+        when (state) {
+            is UiResult.Error -> {}
+            is UiResult.Loading -> {}
+            is UiResult.Success<*> -> {
+                if (state.data !is ActivitySummaryModel) return@Card
+                Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            Modifier.size(36.dp).background(DarkBlue10, RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(state.data.icon, style = MaterialTheme.typography.titleMedium)
+                        }
+                        Spacer_12dp()
+                        Column(Modifier.weight(1f)) {
+                            Text(state.data.name, style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                stringResource(Res.string.summary),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Black40
+                            )
+                        }
+                        Spacer_12dp()
+                        IconButton(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            shape = MaterialTheme.shapes.small,
+                            size = 36.dp
+                        ) {
+                        }
+                    }
+                    Spacer_12dp()
+                    Row(Modifier.fillMaxWidth()) {
+                        TextLabelVertical(
+                            modifier = Modifier.weight(1f),
+                            label = stringResource(Res.string.activity_success_rate),
+                            data = "${state.data.successRate}%",
+                            dataColor = Green100
+                        )
+                        TextLabelVertical(
+                            modifier = Modifier.weight(1f),
+                            label = stringResource(Res.string.activity_points_earned),
+                            data = state.data.pointsEarned.toString(),
+                        )
+                    }
+                    Spacer_8dp()
+                    Row(Modifier.fillMaxWidth()) {
+                        TextLabelVertical(
+                            modifier = Modifier.weight(1f),
+                            label = stringResource(Res.string.activity_completed),
+                            data = state.data.completed.toString(),
+                        )
+                        TextLabelVertical(
+                            modifier = Modifier.weight(1f),
+                            label = stringResource(Res.string.activity_failed),
+                            data = state.data.failed.toString(),
+                            dataColor = Red100
+                        )
+                    }
                 }
             }
-            Spacer_12dp()
-            Row(Modifier.fillMaxWidth()) {
-                TextLabelVertical(
-                    modifier = Modifier.weight(1f),
-                    label = stringResource(Res.string.activity_success_rate),
-                    data = "${data.successRate}%",
-                    dataColor = Green100
-                )
-                TextLabelVertical(
-                    modifier = Modifier.weight(1f),
-                    label = stringResource(Res.string.activity_points_earned),
-                    data = data.pointsEarned.toString(),
-                )
-            }
-            Spacer_8dp()
-            Row(Modifier.fillMaxWidth()) {
-                TextLabelVertical(
-                    modifier = Modifier.weight(1f),
-                    label = stringResource(Res.string.activity_completed),
-                    data = data.completed.toString(),
-                )
-                TextLabelVertical(
-                    modifier = Modifier.weight(1f),
-                    label = stringResource(Res.string.activity_failed),
-                    data = data.failed.toString(),
-                    dataColor = Red100
-                )
-            }
+            else -> Unit
         }
+
     }
 }
+
 @Preview
 @Composable
 fun ActivityScreenPreview() {

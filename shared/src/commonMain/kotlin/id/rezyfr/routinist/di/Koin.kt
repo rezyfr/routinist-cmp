@@ -18,6 +18,7 @@ import id.rezyfr.routinist.domain.repo.HabitRepository
 import id.rezyfr.routinist.domain.usecase.CheckTokenUseCase
 import id.rezyfr.routinist.domain.usecase.CreateHabitUseCase
 import id.rezyfr.routinist.domain.usecase.CreateProgressUseCase
+import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
 import id.rezyfr.routinist.domain.usecase.GetHabitSummaryUseCase
 import id.rezyfr.routinist.domain.usecase.GetRandomHabitUseCase
 import id.rezyfr.routinist.domain.usecase.GetTodayHabitsUseCase
@@ -27,6 +28,7 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import id.rezyfr.routinist.presentation.ui.create.CreateHabitViewModel
 import id.rezyfr.routinist.presentation.ui.main.MainViewModel
+import id.rezyfr.routinist.presentation.ui.main.activity.ActivityViewModel
 import id.rezyfr.routinist.presentation.ui.main.home.HomeViewModel
 import id.rezyfr.routinist.presentation.ui.onboarding.OnBoardingViewModel
 import id.rezyfr.routinist.presentation.ui.onboarding.login.LoginViewModel
@@ -63,6 +65,7 @@ fun appModule() = module {
     factory { CreateProgressUseCase(get())}
     factory { CheckTokenUseCase(get())}
     factory { CreateHabitUseCase(get()) }
+    factory { GetActivitySummaryUseCase(get()) }
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
@@ -70,4 +73,5 @@ fun appModule() = module {
     factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
     factory { CreateHabitViewModel() }
+    factory { ActivityViewModel(get()) }
 }

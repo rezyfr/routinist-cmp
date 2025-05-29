@@ -6,7 +6,7 @@ import id.rezyfr.routinist.domain.repo.AuthRepository
 
 class LoginUseCase(
     private val authRepository: AuthRepository
-) : UseCase<UiResult<Unit>, Pair<String, String>> {
+) : UseCase<Unit, Pair<String, String>> {
     override suspend fun execute(params: Pair<String, String>): UiResult<Unit> {
         return handleResult(
             execute = { authRepository.login(params.first, params.second) },

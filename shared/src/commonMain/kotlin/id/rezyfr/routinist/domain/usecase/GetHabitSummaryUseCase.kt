@@ -7,7 +7,7 @@ import id.rezyfr.routinist.domain.repo.HabitRepository
 
 class GetHabitSummaryUseCase(
     private val repository: HabitRepository
-) : UseCase<UiResult<HabitSummaryModel>, Unit> {
+) : UseCase<HabitSummaryModel, Unit> {
     override suspend fun execute(params: Unit): UiResult<HabitSummaryModel> {
         return handleResult(
             execute = {

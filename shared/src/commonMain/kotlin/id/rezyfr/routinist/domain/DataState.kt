@@ -8,7 +8,7 @@ sealed class UiResult<out T> {
     data class Success<T>(val data: T) : UiResult<T>()
     object SuccessEmpty : UiResult<Nothing>()
     data class Error(val exception: Exception) : UiResult<Nothing>()
-    data class Loading(val progressBarState: ProgressBarState) : UiResult<Nothing>()
+    data object Loading : UiResult<Nothing>()
     data object Uninitialized : UiResult<Nothing>()
 
     fun isSuccess() = this is Success
@@ -33,11 +33,10 @@ suspend fun <R, T> handleResult(
 }
 
 fun <R, T> handleFlowResult(
-    loadingState: ProgressBarState,
      execute: suspend () -> Result<T>,
     onSuccess: suspend (T) -> R
 ) : Flow<UiResult<R>> = flow {
-    emit(UiResult.Loading(loadingState))
+    emit(UiResult.Loading)
     execute().onSuccess {
         if (it is Collection<*> && it.isEmpty()) {
             emit(UiResult.SuccessEmpty)

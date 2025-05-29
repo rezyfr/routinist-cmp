@@ -6,7 +6,7 @@ import id.rezyfr.routinist.domain.repo.HabitRepository
 
 class CreateHabitUseCase(
     private val habitRepository: HabitRepository
-) : UseCase<UiResult<String>, CreateHabitUseCase.Params>  {
+) : UseCase<String, CreateHabitUseCase.Params>  {
 
     override suspend fun execute(params: Params): UiResult<String> {
         return handleResult(

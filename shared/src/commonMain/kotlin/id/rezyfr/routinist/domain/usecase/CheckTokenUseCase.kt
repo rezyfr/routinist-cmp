@@ -6,7 +6,7 @@ import id.rezyfr.routinist.domain.repo.AuthRepository
 
 class CheckTokenUseCase (
     private val authRepository: AuthRepository
-) : UseCase<UiResult<String>, Unit> {
+) : UseCase<String, Unit> {
     override suspend fun execute(params: Unit): UiResult<String> {
         return handleResult(
             execute = { authRepository.checkToken() },
