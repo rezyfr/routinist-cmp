@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -54,21 +56,24 @@ import routinist.shared.generated.resources.summary
 fun ActivityScreen(
     viewModel: ActivityViewModel = koinInject(),
 ) {
+    val state = viewModel.state.value
     DefaultScreenUI(
         titleToolbar = stringResource(Res.string.activity),
         toolbarContent = {
             DateRangeSelector(
-                Modifier.background(Color.White).padding(top = 12.dp, start = 24.dp, end = 24.dp, bottom = 16.dp)
+                Modifier.background(Color.White)
+                    .padding(top = 12.dp, start = 24.dp, end = 24.dp, bottom = 16.dp),
+                state.formattedDate,
+                events = viewModel::setEvent
             )
         },
     ) {
         ActivityContent(
-            state = viewModel.state.value,
+            state = state,
             events = viewModel::setEvent
         )
     }
 }
-
 @Composable
 fun ActivityContent(
     state: ActivityState,
@@ -81,11 +86,11 @@ fun ActivityContent(
         )
     }
 }
-
 @Composable
 fun DateRangeSelector(
     modifier: Modifier = Modifier,
-    date: String = "May 28 - Jun 3"
+    date: String = "May 28 - Jun 3",
+    events: (ActivityEvent) -> Unit = {}
 ) {
     Row(
         modifier.fillMaxWidth(),
@@ -95,11 +100,21 @@ fun DateRangeSelector(
             Text(stringResource(Res.string.date), style = MaterialTheme.typography.bodyLarge)
             Text(date, style = MaterialTheme.typography.bodyMedium, color = Black60)
         }
-        Row() {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(
+                imageVector = Icons.Default.ChevronLeft,
+                onClick = { events(ActivityEvent.PreviousWeek) },
+                size = 40.dp
+            )
+            Spacer_8dp()
+            IconButton(
+                imageVector = Icons.Default.ChevronRight,
+                onClick = { events(ActivityEvent.NextWeek) },
+                size = 40.dp
+            )
         }
     }
 }
-
 @Composable
 fun ActivitySummaryCard(
     modifier: Modifier = Modifier,
@@ -146,7 +161,7 @@ fun ActivitySummaryCard(
                         TextLabelVertical(
                             modifier = Modifier.weight(1f),
                             label = stringResource(Res.string.activity_success_rate),
-                            data = "${state.data.successRate}%",
+                            data = "%${state.data.successRate}",
                             dataColor = Green100
                         )
                         TextLabelVertical(
@@ -171,12 +186,11 @@ fun ActivitySummaryCard(
                     }
                 }
             }
+
             else -> Unit
         }
-
     }
 }
-
 @Preview
 @Composable
 fun ActivityScreenPreview() {

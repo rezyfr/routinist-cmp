@@ -164,6 +164,7 @@ fun MainScreen(
                         onNavigating = { showBottomNav = false },
                         onBack = { showBottomNav = true }
                     )
+                    showBottomNav = true
                 }
                 composable(route = BottomNavigation.EXPLORE.route) {
                     showBottomNav = true

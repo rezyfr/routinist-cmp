@@ -11,13 +11,15 @@ data class ActivitySummaryModel(
     val pointsEarned: Long
 ) {
     companion object {
-        fun fromResponse(response: ActivitySummaryResponse) = ActivitySummaryModel(
-            name = response.userHabitName,
-            icon = response.userHabitIcon,
-            successRate = response.successRate,
-            completed = response.completed,
-            failed = response.failed,
-            pointsEarned = 0
-        )
+        fun fromResponse(response: ActivitySummaryResponse) : ActivitySummaryModel{
+            return ActivitySummaryModel(
+                name = response.userHabitName.ifEmpty { "All Habits" },
+                icon = response.userHabitIcon.ifEmpty { "\uD83D\uDC40" },
+                successRate = response.successRate,
+                completed = response.completed,
+                failed = response.failed,
+                pointsEarned = 0
+            )
+        }
     }
 }

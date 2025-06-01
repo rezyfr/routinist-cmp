@@ -46,7 +46,7 @@ class HomeViewModel(
                 },
                 ifSuccess = {
                     setState { copy(updatingProgressId = -1) }
-                    if (it != null) {
+                    if (it == 1L) {
                         setAction { HomeAction.NavigateToMilestone(it.toInt()) }
                     }
                     setAction { HomeAction.Refresh }

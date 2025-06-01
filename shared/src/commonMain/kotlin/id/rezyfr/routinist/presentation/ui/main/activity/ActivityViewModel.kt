@@ -9,7 +9,11 @@ import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
 import id.rezyfr.routinist.presentation.component.core.ProgressBarState
 import id.rezyfr.routinist.presentation.util.BaseViewModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 class ActivityViewModel(
     private val summaryUseCase: GetActivitySummaryUseCase
@@ -23,6 +27,34 @@ class ActivityViewModel(
     }
 
     override fun onTriggerEvent(event: ActivityEvent) {
+        when (event) {
+            is ActivityEvent.NextWeek -> {
+                setState {
+                    copy(
+                        now = state.value.now.plus(
+                            7,
+                            DateTimeUnit.DAY,
+                            TimeZone.currentSystemDefault()
+                        )
+                    )
+                }
+
+                getActivitySummary(from = state.value.startDate, to = state.value.endDate)
+            }
+
+            is ActivityEvent.PreviousWeek -> {
+                setState {
+                    copy(
+                        now = state.value.now.minus(
+                            7,
+                            DateTimeUnit.DAY,
+                            TimeZone.currentSystemDefault()
+                        )
+                    )
+                }
+                getActivitySummary(from = state.value.startDate, to = state.value.endDate)
+            }
+        }
     }
 
     private fun getActivitySummary(
