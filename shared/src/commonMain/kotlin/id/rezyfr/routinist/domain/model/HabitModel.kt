@@ -8,7 +8,7 @@ import migrations.HabitEntity
 @Serializable
 data class HabitModel(
     val defaultGoal: Int,
-    val id: Int,
+    val id: Long,
     val icon: String,
     val measurement: String,
     val name: String,
@@ -32,7 +32,7 @@ data class HabitModel(
         fun fromEntity(entity: HabitEntity): HabitModel {
             return HabitModel(
                 defaultGoal = entity.goal.toInt(),
-                id = entity.id.toInt(),
+                id = entity.id,
                 icon = entity.icon,
                 measurement = entity.measurement,
                 name = entity.name,

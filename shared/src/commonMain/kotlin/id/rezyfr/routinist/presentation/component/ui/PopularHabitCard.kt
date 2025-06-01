@@ -18,19 +18,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import id.rezyfr.routinist.domain.model.HabitModel
 import id.rezyfr.routinist.domain.model.UnitModel
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import id.rezyfr.routinist.presentation.component.core.Spacer_8dp
 import id.rezyfr.routinist.presentation.theme.AppTheme
 import id.rezyfr.routinist.presentation.theme.Black10
 import id.rezyfr.routinist.presentation.theme.Black100
 import id.rezyfr.routinist.presentation.theme.Black60
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun PopularHabitCard(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
     habit: HabitModel,
-    onClick: (Int) -> Unit,
+    onClick: (Long) -> Unit,
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),

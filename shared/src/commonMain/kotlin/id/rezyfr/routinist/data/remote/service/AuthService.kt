@@ -15,7 +15,7 @@ interface AuthService {
         email: String,
         password: String,
         gender: String,
-        habitId: Int
+        habitId: Long
     ): NetworkResponse<BaseResponse<TokenResponse?>>
 
     suspend fun checkToken() : NetworkResponse<BaseResponse<String?>>

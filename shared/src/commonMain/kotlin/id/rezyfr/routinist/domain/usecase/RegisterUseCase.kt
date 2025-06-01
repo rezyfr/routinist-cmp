@@ -31,7 +31,7 @@ class RegisterUseCase(
         val email: String,
         val password: String,
         val name: String,
-        val habitId: Int,
+        val habitId: Long,
         val gender: Gender
     )
 }

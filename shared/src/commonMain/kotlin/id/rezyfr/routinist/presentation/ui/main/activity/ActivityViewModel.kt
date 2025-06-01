@@ -1,12 +1,12 @@
 package id.rezyfr.routinist.presentation.ui.main.activity
 
-import androidx.compose.ui.input.key.Key.Companion.P
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.handleResult
 import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
-import id.rezyfr.routinist.presentation.component.core.ProgressBarState
+import id.rezyfr.routinist.domain.usecase.GetUserHabitsUseCase
+import id.rezyfr.routinist.presentation.component.core.UIComponent
+import id.rezyfr.routinist.presentation.ui.main.activity.ActivityAction.ShowUserHabits
 import id.rezyfr.routinist.presentation.util.BaseViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -16,7 +16,8 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
 class ActivityViewModel(
-    private val summaryUseCase: GetActivitySummaryUseCase
+    private val summaryUseCase: GetActivitySummaryUseCase,
+    private val getUserHabitsUseCase: GetUserHabitsUseCase
 ) : BaseViewModel<ActivityEvent, ActivityState, ActivityAction>() {
     override fun setInitialState(): ActivityState {
         return ActivityState()
@@ -54,6 +55,16 @@ class ActivityViewModel(
                 }
                 getActivitySummary(from = state.value.startDate, to = state.value.endDate)
             }
+
+            is ActivityEvent.OpenUserHabits -> {
+                if (state.value.userHabits is UiResult.Success) {
+                    setAction { ShowUserHabits(state.value.userHabits.asSuccess().orEmpty()) }
+                } else {
+                    getUserHabits()
+                }
+            }
+
+            is ActivityEvent.OnHabitSelected -> getActivitySummary(userHabitId = event.userHabitId)
         }
     }
 
@@ -75,6 +86,23 @@ class ActivityViewModel(
                 },
                 ifSuccess = {
                     setState { copy(summary = UiResult.Success(it)) }
+                }
+            )
+        }
+    }
+
+    private fun getUserHabits() {
+        viewModelScope.launch {
+            getUserHabitsUseCase.execute(Unit).handleResult(
+                ifError = {
+                    setError { UIComponent.ToastSimple(it.message.orEmpty()) }
+                },
+                ifSuccess = {
+                    setState { copy(
+                        userHabits = UiResult.Success(it),
+                        isUserHabitExpanded = true
+                    ) }
+                    setAction { ActivityAction.ShowUserHabits(it) }
                 }
             )
         }

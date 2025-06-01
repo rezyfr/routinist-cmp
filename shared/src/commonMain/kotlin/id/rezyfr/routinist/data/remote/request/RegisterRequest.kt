@@ -14,5 +14,5 @@ data class RegisterRequest(
     @SerialName("gender")
     val gender: String,
     @SerialName("habit_id")
-    val habitId: Int
+    val habitId: Long
 )

@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserHabitResponse(
+data class HabitProgressResponse(
     @SerialName("goal")
-    val goal: Int?,
+    val goal: Long?,
     @SerialName("goal_frequency")
     val goalFrequency: String?,
     @SerialName("icon")
@@ -15,6 +15,10 @@ data class UserHabitResponse(
     val id: Long?,
     @SerialName("name")
     val name: String?,
+    @SerialName("progress")
+    val progress: Float?,
     @SerialName("unit")
-    val unit: UnitResponse?
+    val unit: UnitResponse?,
+    @SerialName("created_at")
+    val createdAt: String?
 )

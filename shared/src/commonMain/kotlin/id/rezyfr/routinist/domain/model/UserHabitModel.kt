@@ -6,11 +6,9 @@ data class UserHabitModel(
     val goal: Int,
     val goalFrequency: String,
     val icon: String,
-    val id: Int,
+    val id: Long,
     val name: String,
-    val progress: Int,
     val unit: UnitModel,
-    val createdAt: String
 ) {
     companion object {
         fun fromResponse(response: UserHabitResponse): UserHabitModel {
@@ -20,9 +18,23 @@ data class UserHabitModel(
                 icon = response.icon.orEmpty(),
                 id = response.id ?: 0,
                 name = response.name.orEmpty(),
-                progress = response.progress ?: 0,
                 unit = UnitModel.fromResponse(response.unit!!),
-                createdAt = response.createdAt.orEmpty()
+            )
+        }
+
+        fun generateDummy(): UserHabitModel {
+            return UserHabitModel(
+                goal = 10,
+                goalFrequency = "daily",
+                icon = "https://via.placeholder.com/150",
+                id = 1,
+                name = "Drink Water",
+                unit = UnitModel(
+                    id = 1,
+                    name = "ml",
+                    symbol = "ml",
+                    measurement = "Milliliter"
+                ),
             )
         }
     }

@@ -2,6 +2,7 @@ package id.rezyfr.routinist.presentation.ui.main.activity
 
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.model.ActivitySummaryModel
+import id.rezyfr.routinist.domain.model.UserHabitModel
 import id.rezyfr.routinist.presentation.component.core.ViewEvent
 import id.rezyfr.routinist.presentation.component.core.ViewSingleAction
 import id.rezyfr.routinist.presentation.component.core.ViewState
@@ -15,7 +16,9 @@ import kotlinx.datetime.toLocalDateTime
 
 data class ActivityState(
     val summary: UiResult<ActivitySummaryModel> = UiResult.Uninitialized,
+    val userHabits: UiResult<List<UserHabitModel>> = UiResult.Uninitialized,
     val now: Instant = Clock.System.now(),
+    val isUserHabitExpanded: Boolean = false
 ) : ViewState {
     val startDate: LocalDateTime
         get() = now.minus(7, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
@@ -32,6 +35,10 @@ data class ActivityState(
 sealed class ActivityEvent : ViewEvent {
     data object PreviousWeek : ActivityEvent()
     data object NextWeek : ActivityEvent()
+    data object OpenUserHabits : ActivityEvent()
+    data class OnHabitSelected(val userHabitId: Long) : ActivityEvent()
 }
 
-sealed class ActivityAction : ViewSingleAction
+sealed class ActivityAction : ViewSingleAction {
+    data class ShowUserHabits(val habits: List<UserHabitModel>) : ActivityAction()
+}

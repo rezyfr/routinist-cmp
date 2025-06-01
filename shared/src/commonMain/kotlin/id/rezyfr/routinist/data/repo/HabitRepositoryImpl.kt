@@ -2,14 +2,12 @@ package id.rezyfr.routinist.data.repo
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.russhwolf.settings.Settings
 import id.rezyfr.routinist.RoutinistDatabase
-import id.rezyfr.routinist.constants.SettingsConstant
 import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
+import id.rezyfr.routinist.data.remote.response.HabitProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
 import id.rezyfr.routinist.data.remote.response.HabitSummaryResponse
-import id.rezyfr.routinist.data.remote.response.UnitResponse
 import id.rezyfr.routinist.data.remote.response.UserHabitResponse
 import id.rezyfr.routinist.data.remote.response.handleResponse
 import id.rezyfr.routinist.data.remote.service.HabitService
@@ -52,8 +50,8 @@ class HabitRepositoryImpl(
         }
     }
 
-    override suspend fun getTodayHabits(): Result<List<UserHabitResponse>> {
-        return service.getTodayHabits().handleResponse()
+    override suspend fun getTodayHabitProgresses(): Result<List<HabitProgressResponse>> {
+        return service.getTodayHabitProgresses().handleResponse()
     }
 
     override suspend fun getHabitSummary(): Result<HabitSummaryResponse> {
@@ -80,5 +78,9 @@ class HabitRepositoryImpl(
         endDate: String
     ): Result<ActivitySummaryResponse> {
         return service.getActivitySummary(userHabitId, startDate, endDate).handleResponse()
+    }
+
+    override suspend fun getUserHabits(): Result<List<UserHabitResponse>> {
+        return service.getUserHabits().handleResponse()
     }
 }

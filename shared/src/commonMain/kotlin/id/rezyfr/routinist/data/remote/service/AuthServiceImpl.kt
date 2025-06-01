@@ -29,7 +29,7 @@ class AuthServiceImpl(
         email: String,
         password: String,
         gender: String,
-        habitId: Int
+        habitId: Long
     ): NetworkResponse<BaseResponse<TokenResponse?>> {
         return execute {
             apiClient.post(

@@ -10,7 +10,7 @@ data class HabitResponse(
     @SerialName("default_goal")
     val defaultGoal: Int?,
     @SerialName("id")
-    val id: Int?,
+    val id: Long?,
     @SerialName("icon")
     val icon: String?,
     @SerialName("measurement")

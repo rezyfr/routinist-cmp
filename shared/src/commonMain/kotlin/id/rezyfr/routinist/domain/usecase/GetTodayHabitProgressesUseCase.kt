@@ -2,21 +2,19 @@ package id.rezyfr.routinist.domain.usecase
 
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.handleResult
-import id.rezyfr.routinist.domain.model.UserHabitModel
+import id.rezyfr.routinist.domain.model.HabitProgressModel
 import id.rezyfr.routinist.domain.repo.HabitRepository
 
-class GetTodayHabitsUseCase(
+class GetTodayHabitProgressesUseCase(
     private val repository: HabitRepository
-) : UseCase<List<UserHabitModel>, Unit> {
-    override suspend fun execute(params: Unit): UiResult<List<UserHabitModel>> {
+) : UseCase<List<HabitProgressModel>, Unit> {
+    override suspend fun execute(params: Unit): UiResult<List<HabitProgressModel>> {
         return handleResult(
             execute = {
-                repository.getTodayHabits()
+                repository.getTodayHabitProgresses()
             },
             onSuccess = {
-                it.map {
-                    UserHabitModel.Companion.fromResponse(it)
-                }
+                it.map { HabitProgressModel.fromResponse(it) }
             }
         )
     }

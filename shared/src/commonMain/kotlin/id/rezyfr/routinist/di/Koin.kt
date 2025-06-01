@@ -21,11 +21,10 @@ import id.rezyfr.routinist.domain.usecase.CreateProgressUseCase
 import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
 import id.rezyfr.routinist.domain.usecase.GetHabitSummaryUseCase
 import id.rezyfr.routinist.domain.usecase.GetRandomHabitUseCase
-import id.rezyfr.routinist.domain.usecase.GetTodayHabitsUseCase
+import id.rezyfr.routinist.domain.usecase.GetTodayHabitProgressesUseCase
+import id.rezyfr.routinist.domain.usecase.GetUserHabitsUseCase
 import id.rezyfr.routinist.domain.usecase.LoginUseCase
 import id.rezyfr.routinist.domain.usecase.RegisterUseCase
-import kotlinx.serialization.json.Json
-import org.koin.dsl.module
 import id.rezyfr.routinist.presentation.ui.create.CreateHabitViewModel
 import id.rezyfr.routinist.presentation.ui.main.MainViewModel
 import id.rezyfr.routinist.presentation.ui.main.activity.ActivityViewModel
@@ -33,8 +32,10 @@ import id.rezyfr.routinist.presentation.ui.main.home.HomeViewModel
 import id.rezyfr.routinist.presentation.ui.onboarding.OnBoardingViewModel
 import id.rezyfr.routinist.presentation.ui.onboarding.login.LoginViewModel
 import id.rezyfr.routinist.presentation.ui.onboarding.register.RegisterViewModel
+import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.module
 
 fun initKoin(
     enableNetworkLogs: Boolean = false,
@@ -61,11 +62,12 @@ fun appModule() = module {
     factory { LoginUseCase(get()) }
     factory { GetRandomHabitUseCase(get()) }
     factory { GetHabitSummaryUseCase(get()) }
-    factory { GetTodayHabitsUseCase(get()) }
+    factory { GetTodayHabitProgressesUseCase(get()) }
     factory { CreateProgressUseCase(get())}
     factory { CheckTokenUseCase(get())}
     factory { CreateHabitUseCase(get()) }
     factory { GetActivitySummaryUseCase(get()) }
+    factory { GetUserHabitsUseCase(get())}
 
     factory { LoginViewModel(get(),get()) }
     factory { RegisterViewModel(get(),get())}
@@ -73,5 +75,5 @@ fun appModule() = module {
     factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
     factory { CreateHabitViewModel() }
-    factory { ActivityViewModel(get()) }
+    factory { ActivityViewModel(get(), get()) }
 }

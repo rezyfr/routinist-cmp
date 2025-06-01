@@ -11,7 +11,7 @@ data class RegisterState(
     val confirmPassword: String = "",
     val name: String = "",
     val gender: Gender? = null,
-    val habitId: Int = -1,
+    val habitId: Long = -1,
     val step: Int = 1,
     val habits: UiResult<List<HabitModel>> = UiResult.Uninitialized,
     val progressBarState: ProgressBarState = ProgressBarState.Idle
@@ -21,7 +21,7 @@ data class RegisterState(
             return when (step) {
                 1 -> name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && (password == confirmPassword)
                 2 -> gender != null
-                3 -> habitId != -1
+                3 -> habitId != -1L
                 else -> false
             }
         }

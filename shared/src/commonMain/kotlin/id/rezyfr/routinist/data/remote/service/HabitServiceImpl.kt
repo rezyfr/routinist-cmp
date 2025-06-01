@@ -7,6 +7,7 @@ import id.rezyfr.routinist.data.remote.request.GetActivitySummaryRequest
 import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.BaseResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
+import id.rezyfr.routinist.data.remote.response.HabitProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
 import id.rezyfr.routinist.data.remote.response.HabitSummaryResponse
 import id.rezyfr.routinist.data.remote.response.NetworkResponse
@@ -25,7 +26,7 @@ class HabitServiceImpl(
         }
     }
 
-    override suspend fun getTodayHabits(): NetworkResponse<BaseResponse<List<UserHabitResponse>>> {
+    override suspend fun getTodayHabitProgresses(): NetworkResponse<BaseResponse<List<HabitProgressResponse>>> {
         return execute {
             apiClient.get(
                 endpoint = "api/v1/protected/habit/today",
@@ -82,6 +83,14 @@ class HabitServiceImpl(
                     from = startDate,
                     to = endDate
                 )
+            )
+        }
+    }
+
+    override suspend fun getUserHabits(): NetworkResponse<BaseResponse<List<UserHabitResponse>>> {
+        return execute {
+            apiClient.get(
+                endpoint = "api/v1/protected/habit/user-habits"
             )
         }
     }

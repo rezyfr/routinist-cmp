@@ -21,5 +21,16 @@ data class ActivitySummaryModel(
                 pointsEarned = 0
             )
         }
+
+        fun generateDummy(): ActivitySummaryModel {
+            return ActivitySummaryModel(
+                name = "All Habits",
+                icon = "\uD83D\uDC40",
+                successRate = 50f,
+                completed = 1,
+                failed = 1,
+                pointsEarned = 0
+            )
+        }
     }
 }

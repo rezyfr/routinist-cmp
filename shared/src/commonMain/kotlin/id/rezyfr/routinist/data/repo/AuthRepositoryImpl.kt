@@ -22,7 +22,7 @@ class AuthRepositoryImpl(
         email: String,
         password: String,
         gender: String,
-        habitId: Int
+        habitId: Long
     ): Result<TokenResponse?> {
         return authService.register(name, email, password, gender, habitId).handleResponse()
     }

@@ -15,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.model.HabitModel
-import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import id.rezyfr.routinist.presentation.component.core.Spacer_16dp
 import id.rezyfr.routinist.presentation.component.core.Spacer_4dp
 import id.rezyfr.routinist.presentation.component.ui.SelectableCard
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import routinist.shared.generated.resources.Res
 import routinist.shared.generated.resources.register_habit_desc
 import routinist.shared.generated.resources.register_habit_title
@@ -30,7 +30,7 @@ fun RegisterHabitScreen(
     state: RegisterState,
     events: (RegisterEvent) -> Unit = {}
 ) {
-    val selectedItem = remember { mutableStateOf<Int?>(null) }
+    val selectedItem = remember { mutableStateOf<Long?>(null) }
 
     Column(modifier) {
         Text(
@@ -53,7 +53,7 @@ fun RegisterHabitScreen(
                 items(state.habits.data, key = { it.id }) { habit ->
                     val isSelected = selectedItem.value == habit.id
 
-                    SelectableCard<Int>(
+                    SelectableCard<Long>(
                         emoji = habit.icon,
                         label = habit.name,
                         isSelected = isSelected,

@@ -5,17 +5,17 @@ import id.rezyfr.routinist.domain.handleResult
 import id.rezyfr.routinist.domain.model.HabitProgressModel
 import id.rezyfr.routinist.domain.usecase.CreateProgressUseCase
 import id.rezyfr.routinist.domain.usecase.GetHabitSummaryUseCase
-import id.rezyfr.routinist.domain.usecase.GetTodayHabitsUseCase
+import id.rezyfr.routinist.domain.usecase.GetTodayHabitProgressesUseCase
 import id.rezyfr.routinist.presentation.component.core.ProgressBarState
 import id.rezyfr.routinist.presentation.component.core.UIComponent
-import kotlinx.coroutines.launch
 import id.rezyfr.routinist.presentation.util.BaseViewModel
 import id.rezyfr.routinist.presentation.util.getUpcomingDays
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val createProgressUseCase: CreateProgressUseCase,
     private val getHabitSummaryUseCase: GetHabitSummaryUseCase,
-    private val getTodayHabitsUseCase: GetTodayHabitsUseCase
+    private val getTodayHabitProgressesUseCase: GetTodayHabitProgressesUseCase
 ) : BaseViewModel<HomeEvent, HomeState, HomeAction>() {
 
     init {
@@ -77,23 +77,14 @@ class HomeViewModel(
     fun getTodayHabits() {
         viewModelScope.launch {
             setState { copy(progressBarState = ProgressBarState.ScreenLoading) }
-            getTodayHabitsUseCase.execute(Unit).handleResult(
+            getTodayHabitProgressesUseCase.execute(Unit).handleResult(
                 ifError = {
                     setError { UIComponent.ToastSimple(it.message.orEmpty()) }
                 },
                 ifSuccess = {
                     setState {
                         copy(
-                            today = it.map {
-                                HabitProgressModel(
-                                    id = it.id.toLong(),
-                                    goal = it.goal.toFloat(),
-                                    icon = it.icon,
-                                    unit = it.unit.name,
-                                    name = it.name,
-                                    progress = it.progress.toFloat(),
-                                )
-                            },
+                            today = it,
                             progressBarState = ProgressBarState.Idle
                         )
                     }

@@ -10,7 +10,7 @@ sealed class RegisterEvent : ViewEvent {
 
     data class OnGenderChange(val gender: Gender) : RegisterEvent()
 
-    data class OnHabitChange(val habitId: Int) : RegisterEvent()
+    data class OnHabitChange(val habitId: Long) : RegisterEvent()
 
     data object Next : RegisterEvent()
     data object Previous : RegisterEvent()

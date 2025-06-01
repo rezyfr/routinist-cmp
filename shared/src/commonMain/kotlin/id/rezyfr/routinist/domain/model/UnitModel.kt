@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UnitModel(
-    val id: Int,
+    val id: Long,
     val measurement: String,
     val name: String,
     val symbol: String

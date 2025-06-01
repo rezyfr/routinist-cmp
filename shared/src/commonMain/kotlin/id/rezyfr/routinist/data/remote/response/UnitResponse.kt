@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UnitResponse(
     @SerialName("id")
-    val id: Int?,
+    val id: Long?,
     @SerialName("measurement")
     val measurement: String?,
     @SerialName("name")

@@ -5,10 +5,10 @@ import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.handleResult
 import id.rezyfr.routinist.domain.usecase.GetRandomHabitUseCase
 import id.rezyfr.routinist.domain.usecase.RegisterUseCase
-import kotlinx.coroutines.launch
 import id.rezyfr.routinist.presentation.component.core.ProgressBarState
 import id.rezyfr.routinist.presentation.component.core.UIComponent
 import id.rezyfr.routinist.presentation.util.BaseViewModel
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val getRandomHabitUseCase: GetRandomHabitUseCase,
@@ -109,7 +109,7 @@ class RegisterViewModel(
         setState { copy(gender = value) }
     }
 
-    private fun onHabitChange(value: Int) {
+    private fun onHabitChange(value: Long) {
         setState {
             copy(
                 habitId = value
