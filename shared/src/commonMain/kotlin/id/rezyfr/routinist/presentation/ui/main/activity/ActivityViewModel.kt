@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.handleResult
 import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
+import id.rezyfr.routinist.domain.usecase.GetHabitStatsUseCase
 import id.rezyfr.routinist.domain.usecase.GetUserHabitsUseCase
 import id.rezyfr.routinist.presentation.component.core.UIComponent
 import id.rezyfr.routinist.presentation.ui.main.activity.ActivityAction.ShowUserHabits
@@ -17,7 +18,8 @@ import kotlinx.datetime.plus
 
 class ActivityViewModel(
     private val summaryUseCase: GetActivitySummaryUseCase,
-    private val getUserHabitsUseCase: GetUserHabitsUseCase
+    private val getUserHabitsUseCase: GetUserHabitsUseCase,
+    private val getHabitStatsUseCase: GetHabitStatsUseCase
 ) : BaseViewModel<ActivityEvent, ActivityState, ActivityAction>() {
     override fun setInitialState(): ActivityState {
         return ActivityState()
@@ -25,6 +27,7 @@ class ActivityViewModel(
 
     init {
         getActivitySummary()
+        getHabitStats()
     }
 
     override fun onTriggerEvent(event: ActivityEvent) {
@@ -41,6 +44,7 @@ class ActivityViewModel(
                 }
 
                 getActivitySummary(from = state.value.startDate, to = state.value.endDate)
+                getHabitStats(from = state.value.startDate, to = state.value.endDate)
             }
 
             is ActivityEvent.PreviousWeek -> {
@@ -54,6 +58,7 @@ class ActivityViewModel(
                     )
                 }
                 getActivitySummary(from = state.value.startDate, to = state.value.endDate)
+                getHabitStats(from = state.value.startDate, to = state.value.endDate)
             }
 
             is ActivityEvent.OpenUserHabits -> {
@@ -98,11 +103,35 @@ class ActivityViewModel(
                     setError { UIComponent.ToastSimple(it.message.orEmpty()) }
                 },
                 ifSuccess = {
-                    setState { copy(
-                        userHabits = UiResult.Success(it),
-                        isUserHabitExpanded = true
-                    ) }
+                    setState {
+                        copy(
+                            userHabits = UiResult.Success(it),
+                            isUserHabitExpanded = true
+                        )
+                    }
                     setAction { ActivityAction.ShowUserHabits(it) }
+                }
+            )
+        }
+    }
+
+    private fun getHabitStats(
+        from: LocalDateTime? = null,
+        to: LocalDateTime? = null
+    ) {
+        val params = GetHabitStatsUseCase.Params(
+            from = from,
+            to = to
+        )
+        viewModelScope.launch {
+            setState { copy(stats = UiResult.Loading) }
+            getHabitStatsUseCase.execute(params).handleResult(
+                ifError = {
+                    setState { copy(stats = UiResult.Error(it)) }
+                    setError { UIComponent.ToastSimple(it.message.orEmpty()) }
+                },
+                ifSuccess = {
+                    setState { copy(stats = UiResult.Success(it)) }
                 }
             )
         }

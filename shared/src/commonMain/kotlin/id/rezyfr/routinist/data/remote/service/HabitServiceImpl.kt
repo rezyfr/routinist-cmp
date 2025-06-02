@@ -9,6 +9,7 @@ import id.rezyfr.routinist.data.remote.response.BaseResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
+import id.rezyfr.routinist.data.remote.response.HabitStatsResponse
 import id.rezyfr.routinist.data.remote.response.HabitSummaryResponse
 import id.rezyfr.routinist.data.remote.response.NetworkResponse
 import id.rezyfr.routinist.data.remote.response.UserHabitResponse
@@ -91,6 +92,19 @@ class HabitServiceImpl(
         return execute {
             apiClient.get(
                 endpoint = "api/v1/protected/habit/user-habits"
+            )
+        }
+    }
+
+    override suspend fun getHabitStats(freq: String, startDate: String, endDate: String): NetworkResponse<BaseResponse<List<HabitStatsResponse>>> {
+        return execute {
+            apiClient.post(
+                endpoint = "api/v1/protected/habit/stats/$freq",
+                body = GetActivitySummaryRequest(
+                    userHabitId = 0,
+                    from = startDate,
+                    to = endDate
+                )
             )
         }
     }

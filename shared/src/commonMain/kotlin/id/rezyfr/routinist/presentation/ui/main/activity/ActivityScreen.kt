@@ -1,5 +1,7 @@
 package id.rezyfr.routinist.presentation.ui.main.activity
 
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,33 +34,51 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.model.ActivitySummaryModel
+import id.rezyfr.routinist.domain.model.HabitStatsModel
 import id.rezyfr.routinist.domain.model.UserHabitModel
 import id.rezyfr.routinist.presentation.component.core.DefaultScreenUI
 import id.rezyfr.routinist.presentation.component.core.IconButton
 import id.rezyfr.routinist.presentation.component.core.Spacer_12dp
 import id.rezyfr.routinist.presentation.component.core.Spacer_8dp
+import id.rezyfr.routinist.presentation.component.core.chart.AnimationMode
+import id.rezyfr.routinist.presentation.component.core.chart.DividerProperties
+import id.rezyfr.routinist.presentation.component.core.chart.DotProperties
+import id.rezyfr.routinist.presentation.component.core.chart.DrawStyle
+import id.rezyfr.routinist.presentation.component.core.chart.GridProperties
+import id.rezyfr.routinist.presentation.component.core.chart.HorizontalIndicatorProperties
+import id.rezyfr.routinist.presentation.component.core.chart.LabelProperties
+import id.rezyfr.routinist.presentation.component.core.chart.Line
+import id.rezyfr.routinist.presentation.component.core.chart.LineChart
+import id.rezyfr.routinist.presentation.component.core.chart.LineProperties
+import id.rezyfr.routinist.presentation.component.core.chart.StrokeStyle
 import id.rezyfr.routinist.presentation.component.ui.TextLabelVertical
 import id.rezyfr.routinist.presentation.theme.AppTheme
+import id.rezyfr.routinist.presentation.theme.Black10
+import id.rezyfr.routinist.presentation.theme.Black20
 import id.rezyfr.routinist.presentation.theme.Black40
 import id.rezyfr.routinist.presentation.theme.Black60
 import id.rezyfr.routinist.presentation.theme.BorderColor
 import id.rezyfr.routinist.presentation.theme.DarkBlue10
 import id.rezyfr.routinist.presentation.theme.Green100
+import id.rezyfr.routinist.presentation.theme.PrimaryColor
 import id.rezyfr.routinist.presentation.theme.Red100
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import routinist.shared.generated.resources.Res
 import routinist.shared.generated.resources.activity
+import routinist.shared.generated.resources.activity_comparison_by_week
 import routinist.shared.generated.resources.activity_completed
 import routinist.shared.generated.resources.activity_failed
 import routinist.shared.generated.resources.activity_points_earned
 import routinist.shared.generated.resources.activity_success_rate
 import routinist.shared.generated.resources.date
+import routinist.shared.generated.resources.habits
 import routinist.shared.generated.resources.summary
 
 @Composable
@@ -90,6 +111,12 @@ fun ActivityContent(
 ) {
     Column(Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 12.dp)) {
         ActivitySummaryCard(
+            Modifier.fillMaxWidth(),
+            state = state,
+            events = events
+        )
+        Spacer_12dp()
+        ActivityStatsCard(
             Modifier.fillMaxWidth(),
             state = state,
             events = events
@@ -225,7 +252,6 @@ private fun SelectedSummaryHeader(
             }
         }
         if (userHabits is UiResult.Success<List<UserHabitModel>>) {
-            println("Habits loaded? ${userHabits is UiResult.Success}")
             DropdownMenu(
                 shadowElevation = 0.dp,
                 offset = DpOffset(x = 0.dp, y = 0.dp),
@@ -260,6 +286,110 @@ private fun SelectedSummaryHeader(
                     )
                 }
             }
+        }
+    }
+}
+@Composable
+fun ActivityStatsCard(
+    modifier: Modifier = Modifier,
+    state: ActivityState,
+    events: (ActivityEvent) -> Unit = {}
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, BorderColor),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+    ) {
+        when (state.stats) {
+            is UiResult.Error -> {}
+            is UiResult.Loading -> {}
+            is UiResult.Success<List<HabitStatsModel>> -> {
+                Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            Modifier.size(36.dp).background(DarkBlue10, RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("\uD83D\uDCC8", style = MaterialTheme.typography.titleMedium)
+                        }
+                        Spacer_12dp()
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                stringResource(Res.string.habits),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                stringResource(Res.string.activity_comparison_by_week),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Black40
+                            )
+                        }
+                    }
+                    Spacer_12dp()
+                    LineChart(
+                        modifier = Modifier.height(100.dp).padding(horizontal = 16.dp),
+                        labelProperties = LabelProperties(
+                            enabled = true,
+                            labels = state.stats.data.map { it.date.substring(8, 10) },
+                            textStyle = MaterialTheme.typography.labelSmall.copy(color = Black20)
+                        ),
+                        data = remember {
+                            listOf(
+                                Line(
+                                    label = "",
+                                    values = state.stats.data.map { it.success.toDouble() },
+                                    color = SolidColor(Color(0xFF000DFF)),
+                                    firstGradientFillColor = Color(0xFFB09FFF).copy(alpha = .3f),
+                                    secondGradientFillColor = Color.Transparent,
+                                    strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                                    gradientAnimationDelay = 1000,
+                                    drawStyle = DrawStyle.Stroke(width = 2.dp),
+                                    dotProperties = DotProperties(
+                                        enabled = true,
+                                        color = SolidColor(PrimaryColor),
+                                        strokeColor = SolidColor(Color.White),
+                                        strokeWidth = 4.dp,
+                                        radius = 6.dp,
+                                    )
+                                )
+                            )
+                        },
+                        indicatorProperties = HorizontalIndicatorProperties(
+                            enabled = false
+                        ),
+                        animationMode = AnimationMode.Together(delayBuilder = {
+                            it * 500L
+                        }),
+                        dividerProperties = DividerProperties(
+                            yAxisProperties = LineProperties(enabled = false),
+                            xAxisProperties = LineProperties(
+                                thickness = 1.dp,
+                                color = SolidColor(Black10),
+                                style = StrokeStyle.Dashed(
+                                    intervals = floatArrayOf(15f, 15f),
+                                    phase = 10f
+                                ),
+                            )
+                        ), gridProperties = GridProperties(
+                            yAxisProperties = GridProperties.AxisProperties(enabled = false),
+                            xAxisProperties = GridProperties.AxisProperties(
+                                thickness = 1.dp,
+                                color = SolidColor(Black10),
+                                style = StrokeStyle.Dashed(
+                                    intervals = floatArrayOf(15f, 15f),
+                                    phase = 10f
+                                ),
+                            )
+                        )
+                    )
+                }
+            }
+
+            else -> Unit
         }
     }
 }

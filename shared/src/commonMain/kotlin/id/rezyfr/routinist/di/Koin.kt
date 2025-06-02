@@ -1,6 +1,5 @@
 package id.rezyfr.routinist.di
 
-
 import com.russhwolf.settings.Settings
 import id.rezyfr.routinist.common.sqlDriverFactory
 import id.rezyfr.routinist.constants.BASE_URL
@@ -19,6 +18,7 @@ import id.rezyfr.routinist.domain.usecase.CheckTokenUseCase
 import id.rezyfr.routinist.domain.usecase.CreateHabitUseCase
 import id.rezyfr.routinist.domain.usecase.CreateProgressUseCase
 import id.rezyfr.routinist.domain.usecase.GetActivitySummaryUseCase
+import id.rezyfr.routinist.domain.usecase.GetHabitStatsUseCase
 import id.rezyfr.routinist.domain.usecase.GetHabitSummaryUseCase
 import id.rezyfr.routinist.domain.usecase.GetRandomHabitUseCase
 import id.rezyfr.routinist.domain.usecase.GetTodayHabitProgressesUseCase
@@ -63,17 +63,18 @@ fun appModule() = module {
     factory { GetRandomHabitUseCase(get()) }
     factory { GetHabitSummaryUseCase(get()) }
     factory { GetTodayHabitProgressesUseCase(get()) }
-    factory { CreateProgressUseCase(get())}
-    factory { CheckTokenUseCase(get())}
+    factory { CreateProgressUseCase(get()) }
+    factory { CheckTokenUseCase(get()) }
     factory { CreateHabitUseCase(get()) }
     factory { GetActivitySummaryUseCase(get()) }
-    factory { GetUserHabitsUseCase(get())}
+    factory { GetUserHabitsUseCase(get()) }
+    factory { GetHabitStatsUseCase(get()) }
 
-    factory { LoginViewModel(get(),get()) }
-    factory { RegisterViewModel(get(),get())}
-    factory { HomeViewModel(get(),get(),get()) }
+    factory { LoginViewModel(get(), get()) }
+    factory { RegisterViewModel(get(), get()) }
+    factory { HomeViewModel(get(), get(), get()) }
     factory { MainViewModel(get(), get(), get()) }
     factory { OnBoardingViewModel(get()) }
     factory { CreateHabitViewModel() }
-    factory { ActivityViewModel(get(), get()) }
+    factory { ActivityViewModel(get(), get(), get()) }
 }
