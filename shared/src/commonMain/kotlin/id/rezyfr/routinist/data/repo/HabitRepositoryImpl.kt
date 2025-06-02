@@ -7,6 +7,7 @@ import id.rezyfr.routinist.data.remote.response.ActivitySummaryResponse
 import id.rezyfr.routinist.data.remote.response.CreateProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitProgressResponse
 import id.rezyfr.routinist.data.remote.response.HabitResponse
+import id.rezyfr.routinist.data.remote.response.HabitStatsResponse
 import id.rezyfr.routinist.data.remote.response.HabitSummaryResponse
 import id.rezyfr.routinist.data.remote.response.UserHabitResponse
 import id.rezyfr.routinist.data.remote.response.handleResponse
@@ -82,5 +83,11 @@ class HabitRepositoryImpl(
 
     override suspend fun getUserHabits(): Result<List<UserHabitResponse>> {
         return service.getUserHabits().handleResponse()
+    }
+
+    override suspend fun getHabitStats(freq: String,
+                                       startDate: String,
+                                       endDate: String): Result<List<HabitStatsResponse>> {
+        return service.getHabitStats(freq, startDate, endDate).handleResponse()
     }
 }

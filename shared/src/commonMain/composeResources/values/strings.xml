@@ -42,7 +42,8 @@
     <string name="activity_success_rate">Success Rate</string>
     <string name="activity_completed">Completed</string>
     <string name="activity_failed">Failed</string>
-    <string name="activity_points_earned">Points earned</string>
+    <string name="activity_points_earned">Points earned</string>\
+    <string name="activity_comparison_by_week">Comparison by week</string>
 
     <!-- Common -->
     <string name="email">E-mail</string>

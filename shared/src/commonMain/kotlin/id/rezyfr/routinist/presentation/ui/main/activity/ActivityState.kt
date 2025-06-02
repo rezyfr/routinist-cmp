@@ -2,6 +2,7 @@ package id.rezyfr.routinist.presentation.ui.main.activity
 
 import id.rezyfr.routinist.domain.UiResult
 import id.rezyfr.routinist.domain.model.ActivitySummaryModel
+import id.rezyfr.routinist.domain.model.HabitStatsModel
 import id.rezyfr.routinist.domain.model.UserHabitModel
 import id.rezyfr.routinist.presentation.component.core.ViewEvent
 import id.rezyfr.routinist.presentation.component.core.ViewSingleAction
@@ -17,6 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 data class ActivityState(
     val summary: UiResult<ActivitySummaryModel> = UiResult.Uninitialized,
     val userHabits: UiResult<List<UserHabitModel>> = UiResult.Uninitialized,
+    val stats: UiResult<List<HabitStatsModel>> = UiResult.Uninitialized,
     val now: Instant = Clock.System.now(),
     val isUserHabitExpanded: Boolean = false
 ) : ViewState {
